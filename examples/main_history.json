@@ -1,0 +1,58 @@
+{
+    "messages": [
+        {
+            "content": "# system prompt",
+            "role": "system"
+        },
+        {
+            "content": "messages from assistant from the content key in the OpenAI response",
+            "role": "assistant"
+        },
+        {
+            "content": "{\"content\":\"a tool response. in this case reading a file. This is how it looks after the history has been compressed. The tool call is missing, sometimes. But the response was kept"}",
+            "name": "readFile",
+            "role": "tool",
+            "tool_call_id": "chatcmpl-tool-8c4fe4fc8161963d"
+        },
+        {
+            "content": null,
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "function": {
+                        "arguments": "{\"path\": \"filepath", \"startLine\": 137, \"count\": 80, \"mode\": \"remove\", \"content\": \"\"}",
+                        "name": "editFile"
+                    },
+                    "id": "chatcmpl-tool-9cc08588916a197a",
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "content": "OK",
+            "name": "editFile",
+            "role": "tool",
+            "tool_call_id": "chatcmpl-tool-9cc08588916a197a"
+        },
+        {
+            "content": null,
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "function": {
+                        "arguments": "{}",
+                        "name": "taskDone"
+                    },
+                    "id": "chatcmpl-tool-9bc5c6abe95ccffc",
+                    "type": "function"
+                }
+            ]
+        },
+        {
+            "content": "done",
+            "name": "taskDone",
+            "role": "tool",
+            "tool_call_id": "chatcmpl-tool-9bc5c6abe95ccffc"
+        }
+    ]
+}

@@ -1,0 +1,45 @@
+{
+  "codeModel": {
+    "server": {
+      "url": "http://127.0.0.1:8081",
+      "chatUrl": "v1/chat/completions",
+      "promptUrl": "v1/completion",
+      "slotUrl": "slots",
+      "timeoutSeconds": 3600,
+      "httpVerbosity": 0
+    },
+    "name": "qwen3.5-4b",
+    "temp": 0.6,
+    "contextSize": 128000,
+    "reasoningBudget": 4096,
+    "preserveThinking": true,
+    "maxTokens": -1
+  },
+  "summaryModel": {
+    "server": {
+      "url": "http://127.0.0.1:8081",
+      "chatUrl": "v1/chat/completions",
+      "promptUrl": "v1/completion",
+      "slotUrl": "slots",
+      "timeoutSeconds": 60,
+      "httpVerbosity": 0
+    },
+    "name": "lfm2-2.6b",
+    "temp": 0.3,
+    "contextSize": 32768,
+    "reasoningBudget": 0,
+    "maxTokens": 4096
+  },
+  "embedConfig": {
+    "type": "remote",
+    "server": {
+      "url": "http://127.0.0.1:8081",
+      "embedUrl": "embedding",
+      "timeoutSeconds": 60,
+      "httpVerbosity": 0
+    },
+    "name": "nomic-v2",
+    "nBatch": 512,
+    "dimensions": 768
+  }
+}

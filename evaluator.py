@@ -17,10 +17,13 @@ from typing import List, Optional, Dict
 from pathlib import Path
 
 # Path to llmfun workarea where images should be copied
-LLMFUN_WORKAREA = Path.home() / "llmfun" / "workarea"
+LLMFUN_WORKAREA = (Path(".") / "llmfun" / "workarea").resolve()
 
 # Default path where llmfun saves chat history after each run
-LLMFUN_HISTORY_PATH = Path.home() / "llmfun" / "data" / "scratch" / "main_history.json"
+LLMFUN_HISTORY_PATH = (Path(".") / "llmfun" / "data" / "scratch" / "main_history.json").resolve()
+
+LLMFUN_CMD = (Path(".") / "program" / "llmfun").resolve()
+LLMFUN_CONF = (Path(".") / "config" / "default.json").resolve()
 
 # Tool to escalation level mapping
 TOOL_ESCALATION_MAP = {
@@ -41,6 +44,10 @@ class AgentResponse:
     reasoning: str
     latency_ms: float
 
+def agent_cleanup():
+    """Clean the agent workspace and history"""
+    if LLMFUN_HISTORY_PATH.exists:
+        LLMFUN_HISTORY_PATH.unlink()
 
 def call_llmfun_agent(prompt: str, history_file: Optional[Path] = None) -> AgentResponse:
     """Call the llmfun agent with a prompt.
@@ -55,7 +62,7 @@ def call_llmfun_agent(prompt: str, history_file: Optional[Path] = None) -> Agent
     start_time = time.time()
     
     # Build the command
-    cmd = ["llmfun", "agent", "-p", prompt]
+    cmd = [LLMFUN_CMD, "-c", LLMFUN_CONF, "agent", "-p", prompt]
     
     # If history file is provided, we could load it and pass context
     # For now, we just use the prompt directly
@@ -133,7 +140,7 @@ def call_llmfun_agent_with_history(prompt: str) -> AgentResponse:
     start_time = time.time()
     
     # Build the command
-    cmd = ["llmfun", "agent", "-p", prompt]
+    cmd = [LLMFUN_CMD, "-c", LLMFUN_CONF, "agent", "-p", prompt]
     
     try:
         result = subprocess.run(
@@ -381,6 +388,8 @@ def copy_image_to_workarea(image_path: str, datasets_dir: Path) -> Optional[str]
     """
     if not image_path:
         return None
+
+    import os, stat
     
     try:
         # Ensure workarea exists
@@ -395,6 +404,10 @@ def copy_image_to_workarea(image_path: str, datasets_dir: Path) -> Optional[str]
         
         # Destination in workarea (use same filename)
         dst_path = LLMFUN_WORKAREA / Path(image_path).name
+
+        if dst_path.exists():
+            current = os.stat(str(dst_path)).st_mode
+            os.chmod(str(dst_path), current | stat.S_IWUSR)
         
         # Copy the image
         shutil.copy2(src_path, dst_path)
@@ -417,16 +430,17 @@ def evaluate_test_case(test_case, history_file: Optional[Path] = None, datasets_
     Returns:
         AgentResponse from the evaluation
     """
+
+    agent_cleanup()
+
+    # Build the prompt from test case
+    prompt = build_prompt(test_case)
+
     # Handle image if present
     if test_case.image_path and datasets_dir:
         workarea_path = copy_image_to_workarea(test_case.image_path, datasets_dir)
         if workarea_path:
-            # Update the test case prompt to include loadImageApi instruction
-            # The original prompt should already contain this, but we ensure it's there
-            pass  # Image already copied, prompt should have the instruction
-    
-    # Build the prompt from test case
-    prompt = build_prompt(test_case)
+            prompt += f" Path to image: {str(Path(workarea_path).name)}"
     
     # Call the agent and extract tool calls from the saved history
     return call_llmfun_agent_with_history(prompt)

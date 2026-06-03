@@ -19,6 +19,9 @@ from pathlib import Path
 # Path to llmfun workarea where images should be copied
 LLMFUN_WORKAREA = Path.home() / "llmfun" / "workarea"
 
+# Default path where llmfun saves chat history after each run
+LLMFUN_HISTORY_PATH = Path.home() / "llmfun" / "data" / "scratch" / "main_history.json"
+
 # Tool to escalation level mapping
 TOOL_ESCALATION_MAP = {
     "trackerLight": 1,
@@ -112,10 +115,155 @@ def call_llmfun_agent(prompt: str, history_file: Optional[Path] = None) -> Agent
     )
 
 
+def call_llmfun_agent_with_history(prompt: str) -> AgentResponse:
+    """Call the llmfun agent and extract tool calls from the saved history.
+    
+    This method runs the agent, then parses the history JSON that is always
+    saved to llmfun/data/scratch/main_history.json to extract tool calls.
+    This is more reliable than parsing raw output with regex.
+    
+    The history is saved automatically by the llmfun agent after each run.
+    
+    Args:
+        prompt: The prompt to send to the agent
+        
+    Returns:
+        AgentResponse object with parsed output
+    """
+    start_time = time.time()
+    
+    # Build the command
+    cmd = ["llmfun", "agent", "-p", prompt]
+    
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=60
+        )
+        
+        latency_ms = (time.time() - start_time) * 1000
+        
+        if result.returncode != 0:
+            # Agent returned an error
+            return AgentResponse(
+                raw_output=result.stderr,
+                tools_called=[],
+                escalation_level=0,
+                reasoning=f"Error: {result.stderr}",
+                latency_ms=latency_ms
+            )
+        
+        output = result.stdout
+        
+    except subprocess.TimeoutExpired:
+        latency_ms = (time.time() - start_time) * 1000
+        return AgentResponse(
+            raw_output="",
+            tools_called=[],
+            escalation_level=0,
+            reasoning="Timeout after 60 seconds",
+            latency_ms=latency_ms
+        )
+    except Exception as e:
+        latency_ms = (time.time() - start_time) * 1000
+        return AgentResponse(
+            raw_output="",
+            tools_called=[],
+            escalation_level=0,
+            reasoning=f"Exception: {str(e)}",
+            latency_ms=latency_ms
+        )
+    
+    # Extract tool calls from the history file (the preferred method)
+    tools_called = parse_tools_from_history_file(LLMFUN_HISTORY_PATH)
+    
+    # Fallback to regex parsing if no tools found in history
+    if not tools_called:
+        tools_called = parse_tools_from_response(output)
+    
+    escalation_level = calculate_escalation_level(tools_called)
+    reasoning = extract_reasoning(output)
+    
+    return AgentResponse(
+        raw_output=output,
+        tools_called=tools_called,
+        escalation_level=escalation_level,
+        reasoning=reasoning,
+        latency_ms=latency_ms
+    )
+
+
+def parse_tools_from_history(history_data: Dict) -> List[str]:
+    """Parse the chat history JSON to extract tool names.
+    
+    This is the preferred method as it extracts structured data directly
+    from the saved history instead of using fragile regex parsing.
+    
+    The history JSON should have this structure:
+    {
+        "messages": [
+            {"role": "assistant", "tool_calls": [{"function": {"name": "toolName"}}]},
+            ...
+        ]
+    }
+    
+    Args:
+        history_data: Parsed JSON data from history file
+        
+    Returns:
+        List of tool names found in the history
+    """
+    tools_found = []
+    
+    # Known tools to look for
+    known_tools = set(TOOL_ESCALATION_MAP.keys())
+    
+    messages = history_data.get('messages', [])
+    
+    for message in messages:
+        # Look for assistant messages with tool_calls
+        if message.get('role') == 'assistant':
+            tool_calls = message.get('tool_calls', [])
+            for tool_call in tool_calls:
+                # Extract function name from the tool call
+                if isinstance(tool_call, dict):
+                    function = tool_call.get('function', {})
+                    if isinstance(function, dict):
+                        tool_name = function.get('name')
+                        if tool_name and tool_name in known_tools:
+                            if tool_name not in tools_found:
+                                tools_found.append(tool_name)
+    
+    return tools_found
+
+
+def parse_tools_from_history_file(history_file: Path) -> List[str]:
+    """Load and parse tool calls from a history JSON file.
+    
+    Args:
+        history_file: Path to the history JSON file
+        
+    Returns:
+        List of tool names found in the history
+    """
+    try:
+        with open(history_file, 'r') as f:
+            history_data = json.load(f)
+        return parse_tools_from_history(history_data)
+    except Exception as e:
+        print(f"Warning: Failed to load history file {history_file}: {e}")
+        return []
+
+
 def parse_tools_from_response(response: str) -> List[str]:
     """Parse the agent response to extract tool names.
     
-    Looks for patterns like:
+    DEPRECATED: This method uses fragile regex parsing.
+    Use parse_tools_from_history() or parse_tools_from_history_file() instead.
+    
+    This fallback method looks for patterns like:
     - "Calling tool: trackerLight"
     - "tool_call: audibleWarning"
     - Or any known tool names in the response
@@ -263,7 +411,7 @@ def evaluate_test_case(test_case, history_file: Optional[Path] = None, datasets_
     
     Args:
         test_case: TestCase object
-        history_file: Optional path to chat history
+        history_file: Optional path to chat history (not used, kept for API compatibility)
         datasets_dir: Base directory for datasets (to resolve image paths)
         
     Returns:
@@ -280,8 +428,8 @@ def evaluate_test_case(test_case, history_file: Optional[Path] = None, datasets_
     # Build the prompt from test case
     prompt = build_prompt(test_case)
     
-    # Call the agent
-    return call_llmfun_agent(prompt, history_file)
+    # Call the agent and extract tool calls from the saved history
+    return call_llmfun_agent_with_history(prompt)
 
 
 def build_prompt(test_case) -> str:

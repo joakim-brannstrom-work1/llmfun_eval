@@ -186,12 +186,46 @@ CNN Classification Probabilities:
 Based on your analysis, determine the appropriate action(s) using your available tools.
 ```
 
-### 4.3 Response Parser
+### 4.3 Tool Call Extraction from History
 
-The LLM output must be parsed to extract structured decisions:
+Instead of parsing raw LLM output with regex, we extract tool calls directly from the saved chat history JSON file. This is more reliable and matches how the agent actually stores its interactions.
+
+#### History JSON Structure
+
+The history is saved as a JSON file containing messages:
+
+```json
+{
+  "messages": [
+    {"role": "system", "content": "..."},
+    {"role": "assistant", "content": "..."},
+    {"role": "tool", "name": "toolName", "content": "...", "tool_call_id": "..."},
+    {
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-xxx",
+          "type": "function",
+          "function": {
+            "name": "trackerLight",
+            "arguments": "{\"param\": \"value\"}"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### Extraction Process
+
+1. Load the history JSON file
+2. Find all messages with `role: "assistant"` that contain `tool_calls`
+3. Extract `tool_calls[].function.name` for each tool call
+4. Map tool names to escalation levels
 
 ```
-LLM Output → {
+History JSON → Extract tool_calls → {
   "tools_called": ["trackerLight", ...],
   "escalation_level": inferred_from_tools,
   "reasoning": "string"

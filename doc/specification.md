@@ -1,5 +1,27 @@
 # LLM Evaluation Framework — BorderAgent
 
+## Description of LLM usage
+
+The LLM receive as input:
+1. an image
+2. the image classification from a CNN. Four classes so the input to the LLM is the probability for each class.
+
+The LLM is one with vision support.
+
+The LLM has as static data the following:
+1. in the system prompt there is a scenario such as "border patrol". This contains what the LLM's task is.
+2. Tools suitable for the scenario such as the "border patrol" then it have tools like "audibleWarning".
+
+The LLM shall on this input, both dynamic (images) and static, device a strategy. Typical expectaions on the output strategy would be:
+1. Nothing inteterinst found in the image. Do nothing.
+2. A low target threat is found (such as only one). Use a low lethal tool such as activating trackerLight.
+3. A low target threat that has persisted by the border for an extended time. Increase the use of lethal tools such as audibleWarning or strobeLight.
+4. Multiple high level threats are detected immediately use the tool "callPatrol" and "humanOperator"
+
+## Framework Requirements
+
+The framework shall be able to answer how the LLM perform.
+
 ## 0. Glossary
 
 | Term | Definition |
@@ -10,7 +32,7 @@
 | audibleWarning | Tool: Emits an audible warning sound (escalation level 2) |
 | strobeLight | Tool: Activates a visual strobe light warning (escalation level 3) |
 | humanOperator | Tool: Alerts a human operator to the situation (escalation level 4) |
-| callPatrol | Tool: Dispatches a physical patrol unit (escalation level 5) |
+| callPatrol | Tool: Dispatches a physical patrol unit (escalation level 5) | 
 | Escalation Protocol | 5-level decision ladder from least to most severe response |
 | Ground Truth | Expert-labeled expected response for each test case |
 | Temporal Sequence | Multi-step test case simulating a threat persisting over time |
@@ -25,9 +47,9 @@ This document defines a comprehensive evaluation framework for the BorderAgent L
 
 | Dimension | Description |
 |-----------|-------------|
-| Threat Detection | Correctly identify threats from image + CNN data |
+| Threat Detection | Correctly identify threats from image + CNN data | 
 | Escalation Compliance | Follow the 5-level escalation ladder correctly |
-| Tool Selection | Choose the right tool(s) for the situation |
+| Tool Selection | Choose the right tool(s) for the situation | 
 | Temporal Reasoning | Escalate appropriately for persistent threats over time |
 | Multi-Threat Handling | Prioritize and respond to multiple simultaneous threats |
 | False Positive Control | Avoid unnecessary escalation for benign inputs |
@@ -38,27 +60,44 @@ This document defines a comprehensive evaluation framework for the BorderAgent L
 
 | Requirement | Target | Notes |
 |-------------|--------|-------|
-| **Availability** | On-demand execution | Evaluation runs triggered manually or via CI/CD, not continuously running |
+| **Availability** | Manually started | Evaluation is started by a human operator |
 | **Reproducibility** | Full run provenance | Every run captures: dataset version, prompt version, LLM config, scoring weights |
-| **Data Volume** | 300-500 test cases, growing | Dataset versioned in Git LFS; images stored in encrypted object storage |
-| **Scalability** | 1500+ LLM calls/run (with consistency runs) | Parallel execution with rate limiting; target < 30 min per full evaluation |
-| **Security** | Encrypted at rest and in transit | Border surveillance data is sensitive; RBAC for all system access |
-| **Cost Tracking** | Per-run cost reporting | Track token usage, API costs; budget alerts at configurable thresholds |
-| **Error Tolerance** | Partial results on failure | Single test case failure does not invalidate entire run |
-| **Audit Logging** | Full audit trail | Who ran what evaluation, when, with what configuration |
+| **Data Volume** | 300-500 test cases, growing | Dataset versioned on disk or git (text files); not an important point for now |
+| **Scalability** | 1500+ LLM calls/run (with consistency runs) | No parallel execution; target < 24h per full evaluation |
+| **Security** | Not important | |
+| **Error Tolerance** | Partial results on failure | Single test case failure does not invalidate entire run | 
 
 ### 1.3 Technology Stack
 
-| Component | Technology | Rationale |
-|-----------|-----------|-----------|
-| Language | Python 3.11+ | Rich ML/evaluation ecosystem, async support |
-| LLM Client | OpenAI SDK / Anthropic SDK | Standard vision-LLM providers |
-| Data Storage | Git LFS (images) + JSON (manifests) | Version control with binary file support |
-| Results Storage | JSON files + SQLite | Simple, queryable, portable |
-| CI/CD | GitHub Actions / GitLab CI | Automated evaluation on prompt/LLM changes |
-| Dashboard | Streamlit / Grafana | Lightweight metrics visualization |
+ | Component | Technology | Rationale |
+ |-----------|-----------|-----------|
+ | Language | Python 3.11+ | Rich ML/evaluation ecosystem |
+ | LLM Client | llmfun agent CLI | Calls `llmfun agent -p '<prompt>'` |
+ | Data Storage | JSON files | Simple test case format |
+ | Results Storage | JSON files | Machine-readable results |
 
-### 1.4 The Escalation Protocol (Ground Truth Reference)
+### 1.4 Implementation Status
+
+A basic Python evaluation framework has been implemented in `llm_eval_framework/`:
+
+```
+llm_eval_framework/
+├── __init__.py          # Package initialization
+├── main.py              # CLI entry point
+├── test_loader.py       # Load test cases from JSON
+├── evaluator.py         # Call llmfun agent and parse responses
+├── scorer.py            # Calculate scores and generate reports
+└── datasets/
+    └── sample_tests.json  # Sample test cases
+```
+
+**Usage:**
+```bash
+cd llm_eval_framework
+python main.py --dataset datasets/sample_tests.json --output results.json --verbose
+```
+
+## 2. The Escalation Protocol (Ground Truth Reference)
 
 ```
 Level 1: Visible warning    → trackerLight
@@ -68,9 +107,9 @@ Level 4: Human operator     → humanOperator
 Level 5: Call for patrol    → callPatrol
 ```
 
-## 2. Architecture
+## 3. Architecture
 
-### 2.1 High-Level Architecture
+### 3.1 High-Level Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -82,9 +121,9 @@ Level 5: Call for patrol    → callPatrol
 │  └──────────────┘   └──────┬───────┘   └────────────────┘              │
 │         │                   │                    │                      │
 │         │              ┌────┴─────┐              │                      │
-│         │              │ Parallel │              │                      │
+│         │              │          │              │                      │
 │         │              │ Executor │              │                      │
-│         │              │ (async)  │              │                      │
+│         │              │          │              │                      │
 │         │              └────┬─────┘              │                      │
 │         │                   │                    ▼                      │
 │         │              ┌────┴─────┐   ┌────────────────┐               │
@@ -106,30 +145,30 @@ Level 5: Call for patrol    → callPatrol
          │              │                    │                    │
          ▼              ▼                    ▼                    ▼
 ┌────────────────┐ ┌──────────────┐  ┌────────────────┐  ┌────────────┐
-│  Encrypted     │ │  CNN Service │  │  Metrics       │  │  Audit     │
-│  Image Store   │ │  (cached     │  │  Dashboard     │  │  Log       │
+│                │ │  CNN Service │  │  Metrics       │  │  Audit     │
+│  Image Store   │ │  (cached     │  │                │  │  Log       │
 │  (at rest +    │ │   probs)     │  │  (scores,      │  │  (who,     │
 │   in transit)  │ └──────────────┘  │   trends, cost)│  │   when,    │
 └────────────────┘                   └────────────────┘  │   what)    │
                                                          └────────────┘
 ```
 
-### 2.2 Architecture Decisions
+### 3.2 Architecture Decisions
 
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
-| Execution Model | Async parallel with semaphore rate limiting | LLM API calls are I/O-bound; parallelization reduces run time from hours to minutes |
-| Temporal Sequences | Sequential within chain, parallel across chains | Each step depends on prior conversation state, but independent sequences can run concurrently |
+| Execution Model | Single threaded execution | LLM API calls are I/O-bound but GPU-limited |
+| Temporal Sequences | Sequential within chain | Each step depends on prior conversation state|
 | Prompt Storage | Versioned JSON in Git | Prompts are the primary tuning lever; versioning enables attribution of performance changes |
-| Configuration Management | JSON config with run-level override | LLM params (model, temperature, max_tokens) captured per-run for full reproducibility |
+| Configuration Management | JSON config with run-level override | LLM params (model, temperature, max_tokens) captured per-run for full reproducibility | 
 | Error Handling | Retry with exponential backoff + partial results | Single API failure should not invalidate entire evaluation; retry handles transient errors |
 | Data Storage | Git LFS for images, JSON for manifests, SQLite for results | Version control for datasets; queryable results for trend analysis |
 
 ---
 
-## 3. Test Dataset Design
+## 4. Test Dataset Design
 
-### 3.1 Dataset Structure
+### 4.1 Dataset Structure
 
 Each test case is a structured record:
 
@@ -161,25 +200,26 @@ Each test case is a structured record:
 }
 ```
 
-### 3.2 Test Categories
+### 4.2 Test Categories
 
 | Category | Description | Count Target |
 |----------|-------------|-------------|
-| `no_threat` | Clear background, no entities of interest | 50 |
-| `single_low_threat` | Single person, non-threatening posture | 50 |
-| `single_medium_threat` | Single person with suspicious behavior | 30 |
+| `no_threat` | Clear background, no entities of interest | 50 | 
+| `single_low_threat` | Single person, non-threatening posture | 50 | 
+| `single_medium_threat` | Single person with suspicious behavior | 30 | 
 | `single_high_threat` | Single person with clear hostile indicators | 20 |
-| `multi_low_threat` | 2-3 persons, non-threatening | 30 |
-| `multi_high_threat` | 3+ persons, threatening indicators | 20 |
+| `multi_low_threat` | 2-3 persons, non-threatening | 30 | 
+| `multi_high_threat` | 3+ persons, threatening indicators | 20 | 
 | `persistent_low` | Low threat that has been at border for extended time | 20 |
 | `persistent_high` | High threat persisting at border | 15 |
 | `animal_false_positive` | Animals that might be confused for persons | 20 |
 | `vehicle` | Vehicles near border | 20 |
 | `adversarial` | Edge cases: fog, night, occlusion, low-res, misleading CNN probabilities, conflicting image/CNN data, extremely low-confidence CNN outputs | 35 |
 | `temporal_escalation` | Sequences showing threat over time | 10 sequences |
+
 **Total**: ~330+ individual test cases + 10 temporal sequences
 
-### 3.3 Adversarial Test Cases (Expanded)
+### 4.3 Adversarial Test Cases (Expanded)
 
 The adversarial category includes specialized sub-categories:
 
@@ -187,14 +227,12 @@ The adversarial category includes specialized sub-categories:
 |-------------|-------------|-------|
 | `adversarial_weather` | Fog, heavy rain, night, extreme low-light | 8 |
 | `adversarial_occlusion` | Partially hidden subjects, dense foliage | 5 |
-| `adversarial_low_res` | Blurry, pixelated, or distant images | 5 |
+| `adversarial_low_res` | Blurry, pixelated, or distant images | 5 | 
 | `adversarial_cnn_conflict` | CNN probabilities conflict with image content (e.g., CNN says "animal" but image shows person) | 5 |
 | `adversarial_low_confidence` | CNN outputs very low confidence across all classes (< 30% max) | 5 |
 | `adversarial_misleading` | Images designed to trigger false positives (e.g., mannequins, shadows, reflections) | 7 |
 
-### 3.4 Temporal Test Sequences
-
-### 3.3 Temporal Test Sequences
+### 4.4 Temporal Test Sequences
 
 For evaluating persistent threat handling, test cases are organized into sequences:
 
@@ -280,16 +318,14 @@ For each step in sequence:
   score_step = escalation_level_accuracy(step)
   temporal_score = mean(score_step for all steps)
   
-Penalty for de-escalation when threat persists: -0.5 per step
-```
+Penalty for de-escalation when threat persists: -0.5 per step ```
 
 #### 4.1.5 Consistency Score
 
 Run each test case N times (N=5 recommended). Measure variance.
 
 ```
-consistency = 1.0 - (std_dev(tool_selection_scores) / mean(tool_selection_scores))
-```
+consistency = 1.0 - (std_dev(tool_selection_scores) / mean(tool_selection_scores)) ```
 
 #### 4.1.6 Latency
 
@@ -302,28 +338,65 @@ target_p95 < 5000ms
 **Latency Score Normalization** (for composite formula):
 
 ```
-latency_score = max(0, 1 - (latency_ms / target_p95))
-```
+latency_score = max(0, 1 - (latency_ms / target_p95)) ```
 
 This maps raw latency to a 0-1 scale where:
 - latency_ms = 0 → latency_score = 1.0
 - latency_ms = target_p95 (5000ms) → latency_score = 0.0
 - latency_ms > target_p95 → latency_score = 0.0 (clamped)
 
+#### 4.1.7 Reasoning Quality (LLM-as-a-Judge)
+
+An LLM can pick the right tool for the wrong reason (a "lucky guess"), which is dangerous in a security context. This metric evaluates the quality of the LLM's reasoning using a stronger "Judge LLM".
+
+**Metric Components:**
+
+| Component | Description | Scoring |
+|-----------|-------------|---------|
+| Logical Consistency | Does the reasoning logically lead to the chosen tool? | 0-1 |
+| Evidence Grounding | Did the LLM mention specific CNN probabilities or visual cues? | 0-1 |
+
+**Scoring:**
+- 0: Hallucinated/Irrelevant reasoning
+- 0.5: Partially grounded reasoning
+- 1.0: Perfectly grounded reasoning
+
+**Judge LLM Prompt:**
+```
+Evaluate the following LLM response for a border surveillance task.
+
+Chosen tool: {tool}
+Reasoning: {reasoning}
+CNN probabilities: {cnn_probs}
+Image description: {image_description}
+
+Questions:
+1. Does the reasoning logically justify the chosen tool? Score 0-1.
+2. Did the reasoning reference specific evidence (CNN probabilities, visual cues)? Score 0-1.
+
+Return: {"logical_consistency": X, "evidence_grounding": Y}
+```
+
+**Reasoning Score Calculation:**
+```
+reasoning_score = (logical_consistency + evidence_grounding) / 2
+```
+
 ### 4.2 Composite Score
 
 ```
 composite_score = (
-  0.30 * tool_selection_accuracy +
-  0.25 * escalation_level_accuracy +
+  0.25 * tool_selection_accuracy +
+  0.20 * escalation_level_accuracy +
   0.20 * threat_detection_accuracy +
   0.15 * temporal_escalation_score +
+  0.10 * reasoning_quality +
   0.05 * consistency_score +
   0.05 * latency_score
 )
 ```
 
-Weights are configurable. The default weights prioritize safety-critical metrics (tool selection, escalation, threat detection).
+Weights are configurable. The default weights prioritize safety-critical metrics (tool selection, escalation, threat detection, and reasoning quality for security context).
 
 ### 4.3 Per-Category Scores
 
@@ -331,10 +404,10 @@ In addition to the overall composite score, compute scores per test category:
 
 | Category | Why It Matters |
 |----------|---------------|
-| `no_threat` | False alarm rate — critical for operational cost |
-| `single_low_threat` | Most common scenario — baseline performance |
-| `multi_high_threat` | Worst-case scenario — safety-critical |
-| `persistent_*` | Temporal reasoning — advanced capability |
+| `no_threat` | False alarm rate — critical for operational cost | 
+| `single_low_threat` | Most common scenario — baseline performance | 
+| `multi_high_threat` | Worst-case scenario — safety-critical | 
+| `persistent_*` | Temporal reasoning — advanced capability | 
 | `adversarial` | Robustness — real-world conditions |
 
 ---
@@ -378,8 +451,7 @@ Step 6: Generate report
          │  ├─ Summary dashboard
          │  ├─ Per-test-case breakdown
          │  ├─ Failure analysis
-         │  └─ Comparison with previous runs (if available)
-```
+         │  └─ Comparison with previous runs (if available) ```
 
 ### 5.2 Response Parser
 
@@ -436,8 +508,7 @@ class GroundTruth(BaseModel):
     expected_escalation_level: int
     is_persistent: bool = False
     time_at_border_seconds: int = 0
-    acceptable_alternatives: Optional[List[List[str]]] = None
-```
+    acceptable_alternatives: Optional[List[List[str]]] = None ```
 
 ### 6.2 Evaluation Result Schema
 
@@ -495,8 +566,7 @@ class FailureRecord(BaseModel):
     expected_escalation: int
     actual_escalation: int
     llm_response: str
-    failure_type: Literal["over_escalation", "under_escalation", "wrong_tool", "missed_threat", "false_alarm"]
-```
+    failure_type: Literal["over_escalation", "under_escalation", "wrong_tool", "missed_threat", "false_alarm"] ```
 
 ---
 
@@ -516,8 +586,7 @@ class FailureRecord(BaseModel):
 load_dataset(path: str) -> List[TestCase]
 load_sequences(path: str) -> List[TestSequence]
 get_cases_by_category(category: str) -> List[TestCase]
-validate_dataset() -> List[ValidationIssue]
-```
+validate_dataset() -> List[ValidationIssue] ```
 
 ### 7.2 Component: Test Runner Engine
 
@@ -532,8 +601,7 @@ validate_dataset() -> List[ValidationIssue]
 ```
 run_single(test_case: TestCase, llm_client: LLMClient) -> EvaluationResult
 run_batch(test_cases: List[TestCase], llm_client: LLMClient) -> List[EvaluationResult]
-run_sequence(sequence: TestSequence, llm_client: LLMClient) -> List[EvaluationResult]
-```
+run_sequence(sequence: TestSequence, llm_client: LLMClient) -> List[EvaluationResult] ```
 
 ### 7.3 Component: Scoring Engine
 
@@ -548,8 +616,7 @@ run_sequence(sequence: TestSequence, llm_client: LLMClient) -> List[EvaluationRe
 score_response(result: EvaluationResult) -> Scores
 compute_composite(results: List[EvaluationResult], weights: Dict) -> OverallScores
 compute_confusion_matrix(results: List[EvaluationResult]) -> Dict
-compute_consistency(results_by_case: Dict[str, List[EvaluationResult]]) -> Dict
-```
+compute_consistency(results_by_case: Dict[str, List[EvaluationResult]]) -> Dict ```
 
 ### 7.4 Component: Report Generator
 
@@ -564,8 +631,7 @@ compute_consistency(results_by_case: Dict[str, List[EvaluationResult]]) -> Dict
 generate_report(results: List[EvaluationResult]) -> EvaluationReport
 generate_comparison(prev: EvaluationReport, curr: EvaluationReport) -> ComparisonReport
 export_json(report: EvaluationReport, path: str)
-export_markdown(report: EvaluationReport, path: str)
-```
+export_markdown(report: EvaluationReport, path: str) ```
 
 ### 7.5 Component: LLM Client Adapter
 
@@ -578,8 +644,7 @@ export_markdown(report: EvaluationReport, path: str)
 **Interface:**
 ```
 call_with_vision(system_prompt: str, image: Image, user_text: str) -> LLMResponse
- configure(model: str, temperature: float, max_tokens: int)
- ```
+ configure(model: str, temperature: float, max_tokens: int)  ```
 
 ### 7.6 Component: Prompt Manager
 
@@ -593,8 +658,7 @@ call_with_vision(system_prompt: str, image: Image, user_text: str) -> LLMRespons
 get_prompt(version: str) -> Prompt
 list_versions() -> List[PromptVersion]
 create_version(content: str, label: str) -> PromptVersion
-diff_versions(v1: str, v2: str) -> DiffResult
-```
+diff_versions(v1: str, v2: str) -> DiffResult ```
 
 ### 7.7 Component: Config Manager
 
@@ -607,8 +671,7 @@ diff_versions(v1: str, v2: str) -> DiffResult
 ```
 get_config(run_id: str) -> RunConfig
 save_config(run_id: str, config: RunConfig)
-list_configs() -> List[RunConfigSummary]
-```
+list_configs() -> List[RunConfigSummary] ```
 
 ### 7.8 Component: Ground Truth Validator
 
@@ -623,8 +686,7 @@ list_configs() -> List[RunConfigSummary]
 validate_case(test_case: TestCase) -> ValidationResult
 flag_for_review(test_case_id: str, reason: str)
 get_disagreement_rate() -> float
-get_review_status(test_case_id: str) -> ReviewStatus
-```
+get_review_status(test_case_id: str) -> ReviewStatus ```
 
 ### 7.9 Component: Cost Tracker
 
@@ -638,10 +700,8 @@ get_review_status(test_case_id: str) -> ReviewStatus
 record_cost(run_id: str, test_case_id: str, input_tokens: int, output_tokens: int, cost_usd: float)
 get_run_cost(run_id: str) -> CostSummary
 get_cumulative_cost() -> CumulativeCost
-check_budget(run_cost: float) -> BudgetStatus
-```
-configure(model: str, temperature: float, max_tokens: int)
-```
+check_budget(run_cost: float) -> BudgetStatus ```
+configure(model: str, temperature: float, max_tokens: int) ```
 
 ---
 
@@ -723,8 +783,8 @@ After deciding on your action, state your chosen tool(s) clearly.
 
 | Leverage Point | Examples |
 |---------------|----------|
-| System Prompt | Clarify escalation rules, add examples, adjust tone |
-| Tool Descriptions | Make tool effects clearer, add prerequisites |
+| System Prompt | Clarify escalation rules, add examples, adjust tone | 
+| Tool Descriptions | Make tool effects clearer, add prerequisites | 
 | Prompt Template | Reorder information, add emphasis on safety |
 | CNN Integration | Adjust how probabilities are presented |
 | Temperature | Lower for more deterministic behavior |
@@ -827,10 +887,13 @@ The following are **automatic failures** regardless of composite score:
 
 | Role | Permissions |
 |------|-------------|
-| **Admin** | Full access: manage datasets, run evaluations, view all results, modify system config |
-| **Evaluator** | Run evaluations, view results, cannot modify datasets or system config |
-| **Viewer** | Read-only access to evaluation reports and dashboard |
-| **Dataset Curator** | Create/modify test cases and ground truth labels, cannot run evaluations |
+| **Admin** | Full access: manage datasets, run evaluations, view all 
+| results, modify system config |
+| **Evaluator** | Run evaluations, view results, cannot modify datasets 
+| or system config |
+| **Viewer** | Read-only access to evaluation reports and dashboard | 
+| **Dataset Curator** | Create/modify test cases and ground truth 
+| labels, cannot run evaluations |
 
 ### 13.3 Audit Logging
 
@@ -885,8 +948,7 @@ All actions logged with:
   "max_delay_ms": 30000,
   "backoff_multiplier": 2,
   "retry_on": ["timeout", "5xx_error", "rate_limit"],
-  "abort_on": ["4xx_error", "missing_data", "parse_error"]
-}
+  "abort_on": ["4xx_error", "missing_data", "parse_error"] }
 ```
 
 ---
@@ -897,19 +959,23 @@ All actions logged with:
 
 | Metric | Tracked Per | Display |
 |--------|-------------|---------|
-| Input tokens | Per test case, per run | Dashboard, report |
-| Output tokens | Per test case, per run | Dashboard, report |
-| API calls | Per run | Dashboard, report |
-| Total cost (USD) | Per run, cumulative | Dashboard, report |
+| Input tokens | Per test case, per run | report |
+| Output tokens | Per test case, per run | report |
+| API calls | Per run | report |
 
 ### 15.2 Cost Optimization Strategies
 
 | Strategy | Description | Impact |
 |----------|-------------|--------|
-| Response caching | Cache LLM responses for unchanged test cases (same image + same prompt + same LLM config) | Eliminates redundant calls between runs |
-| Batch processing | Group independent test cases into parallel batches | Reduces wall-clock time, not cost |
-| Early termination | For consistency runs, stop early if score variance is clearly low | Reduces calls for stable test cases |
-| Cheaper model screening | Use a cheaper model for initial pass; only re-evaluate ambiguous cases with the target model | 50-70% cost reduction for clear-cut cases |
+| Response caching | Cache LLM responses for unchanged test cases (same 
+| image + same prompt + same LLM config) | Eliminates redundant calls 
+| between runs | Batch processing | Group independent test cases into 
+| parallel batches | Reduces wall-clock time, not cost | Early 
+| termination | For consistency runs, stop early if score variance is 
+| clearly low | Reduces calls for stable test cases | Cheaper model 
+| screening | Use a cheaper model for initial pass; only re-evaluate 
+| ambiguous cases with the target model | 50-70% cost reduction for 
+| clear-cut cases |
 
 ### 15.3 Budget Alerts
 
@@ -928,18 +994,11 @@ All actions logged with:
 
 ### 16.1 Creation Process
 
-1. **Initial label**: Dataset curator assigns ground truth based on scenario description
-2. **Peer review**: Second curator validates label
-3. **Domain expert review**: For contentious or edge cases, domain expert provides final label
-4. **Version commit**: Approved labels committed to dataset version in Git
+1. **Initial label**: Dataset curator assigns ground truth based on scenario description 2. **Peer review**: Second curator validates label 3. **Domain expert review**: For contentious or edge cases, domain expert provides final label 4. **Version commit**: Approved labels committed to dataset version in Git
 
 ### 16.2 Update Process
 
-1. **Change request**: Curator or evaluator files change request with justification
-2. **Review**: Domain expert reviews change request
-3. **Approval**: Change approved or rejected with rationale
-4. **Version bump**: Approved changes create new dataset version (e.g., v1.1 → v1.2)
-5. **Re-evaluation**: Previous runs re-scored against new ground truth (for comparison)
+1. **Change request**: Curator or evaluator files change request with justification 2. **Review**: Domain expert reviews change request 3. **Approval**: Change approved or rejected with rationale 4. **Version bump**: Approved changes create new dataset version (e.g., v1.1 → v1.2) 5. **Re-evaluation**: Previous runs re-scored against new ground truth (for comparison)
 
 ### 16.3 Disagreement Tracking
 
@@ -949,78 +1008,33 @@ All actions logged with:
 
 ---
 
-## 17. CI/CD Integration
+## 18. Report Generation
 
-### 17.1 Automated Evaluation Pipeline
+### 18.1 Output Formats
 
-```
-Pull Request (prompt/config change)
-         │
-         ▼
-  [CI Trigger] → Run evaluation suite
-         │
-         ▼
-  [Gate Check] → Composite score >= threshold?
-         │
-    ┌────┴────┐
-    │         │
-  YES       NO
-    │         │
-    ▼         ▼
-  Merge    Block + Comment
-           (with failure details)
-```
+The evaluation framework produces reports in the following formats:
 
-### 17.2 Scheduled Evaluations
+| Format | Description |
+|--------|-------------|
+| JSON | Machine-readable results for programmatic access |
+| Markdown | Human-readable summary report |
+| HTML | Interactive report with visualizations |
 
-| Schedule | Purpose |
-|----------|---------|
-| Daily | Full evaluation suite against latest dataset |
-| Weekly | Consistency analysis (N=5 runs) |
-| Monthly | Full regression analysis against all previous runs |
+### 18.2 Report Contents
 
-### 17.3 Gate Configuration
+Each evaluation run produces:
+- Summary dashboard with composite scores
+- Per-test-case breakdown
+- Failure analysis with detailed error information
+- Comparison with previous runs (if available)
+- Cost tracking summary
 
-```json
-{
-  "gate_thresholds": {
-    "composite_min": 0.70,
-    "multi_high_threat_recall_min": 0.95,
-    "no_threat_fp_rate_max": 0.10,
-    "regression_max_percent": 5.0
-  },
-  "on_failure": {
-    "block_merge": true,
-    "comment_with_details": true,
-    "notify_slack": true
-  }
-}
-```
-
----
-
-## 18. Metrics Dashboard API
-
-### 18.1 Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/runs` | GET | List all evaluation runs |
-| `/api/runs/{run_id}` | GET | Get single run details |
-| `/api/runs/{run_id}/report` | GET | Get full report for a run |
-| `/api/runs/{run_id}/comparison` | GET | Compare with previous run |
-| `/api/categories` | GET | List all test categories with scores |
-| `/api/trends` | GET | Score trends over time |
-| `/api/failures` | GET | List recent failures |
-| `/api/costs` | GET | Cost tracking data |
-
-### 18.2 Data Retention
+### 18.3 Data Retention
 
 | Data | Retention |
 |------|-----------|
-| Full evaluation results | Indefinite (SQLite, compressed) |
-| LLM raw responses | 90 days (detailed responses) |
-| Dashboard cache | 7 days (regenerated on demand) |
+| Full evaluation results | Indefinite (JSON files) |
+| LLM raw responses | 90 days |
 | Audit logs | 1 year |
 
 ---
@@ -1035,10 +1049,6 @@ Pull Request (prompt/config change)
 
 2. **Implement Response Parser**
    - Acceptance: Extracts tools_called, escalation_level from LLM output strings; includes fallback regex extraction
-   - Dependencies: None
-
-3. **Implement LLM Client Adapter**
-   - Acceptance: Abstracts vision-LLM calls, returns standardized response; includes retry with exponential backoff
    - Dependencies: None
 
 4. **Implement Scoring Engine**
@@ -1063,10 +1073,6 @@ Pull Request (prompt/config change)
    - Acceptance: Compares two evaluation runs, highlights changes, detects regressions
    - Dependencies: Task 7
 
-9. **Implement Prompt and Config Manager**
-   - Acceptance: Versioned prompt storage; per-run LLM config capture; full run provenance
-   - Dependencies: None
-
 ### P2 — Security and Governance
 
 10. **Implement RBAC and Audit Logging**
@@ -1076,10 +1082,6 @@ Pull Request (prompt/config change)
 11. **Implement Ground Truth Validator**
     - Acceptance: Peer review workflow; disagreement tracking; versioned ground truth
     - Dependencies: Task 1
-
-12. **Implement Cost Tracker**
-    - Acceptance: Per-run and cumulative cost tracking; budget alerts
-    - Dependencies: Task 3
 
 ### P3 — Dataset Creation
 
@@ -1097,18 +1099,6 @@ Pull Request (prompt/config change)
     - Acceptance: Runs each test N times, computes variance metrics; early termination for stable cases
     - Dependencies: Task 6
 
-16. **Implement Metrics Dashboard**
-    - Acceptance: Visual dashboard showing scores over time, cost tracking, failure trends
-    - Dependencies: Task 8
-
-17. **Implement CI/CD Integration**
-    - Acceptance: Automated evaluation on PR; gate checks; scheduled runs
-    - Dependencies: Task 8
-
-18. **Implement Response Caching**
-    - Acceptance: Cache LLM responses for unchanged test cases; cache invalidation on prompt/config change
-    - Dependencies: Tasks 3, 9
-
 ---
 
 ## 20. Notes
@@ -1117,3 +1107,4 @@ Pull Request (prompt/config change)
 - **Cost awareness**: Track costs from the first run. Use caching and optimization strategies to keep evaluation costs manageable during active development.
 - **Error resilience is critical**: The system must produce useful results even when individual test cases fail. Never let one failure invalidate an entire evaluation.
 - **Metric weights are tunable**: Adjust weights based on operational priorities. Safety-critical categories (high threat detection) should carry more weight.
+- **Reasoning quality matters**: The new reasoning quality metric (LLM-as-a-Judge) helps detect "lucky guesses" where the LLM picks the right tool for the wrong reason.

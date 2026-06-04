@@ -1,0 +1,418 @@
+{
+  "run_id": "run_20260603_231617",
+  "timestamp": "2026-06-03T23:16:17.958391Z",
+  "total_test_cases": 25,
+  "passed": 11,
+  "failed": 14,
+  "composite_score": 0.5096799999999999,
+  "per_category_scores": {
+    "no_threat": 1.0,
+    "single_low_threat": 0.29799999999999993,
+    "single_high_threat": 0.2264,
+    "animal_false_positive": 1.0,
+    "persistent_threat": 0.024
+  },
+  "results": [
+    {
+      "test_case_id": "test_001",
+      "category": "no_threat",
+      "expected_tools": [],
+      "actual_tools": [],
+      "expected_escalation": 0,
+      "actual_escalation": 0,
+      "tool_selection_score": 1.0,
+      "escalation_score": 1.0,
+      "threat_detection_score": 1.0,
+      "composite_score": 1.0,
+      "passed": true,
+      "failure_type": ""
+    },
+    {
+      "test_case_id": "test_002",
+      "category": "no_threat",
+      "expected_tools": [],
+      "actual_tools": [],
+      "expected_escalation": 0,
+      "actual_escalation": 0,
+      "tool_selection_score": 1.0,
+      "escalation_score": 1.0,
+      "threat_detection_score": 1.0,
+      "composite_score": 1.0,
+      "passed": true,
+      "failure_type": ""
+    },
+    {
+      "test_case_id": "test_003",
+      "category": "no_threat",
+      "expected_tools": [],
+      "actual_tools": [],
+      "expected_escalation": 0,
+      "actual_escalation": 0,
+      "tool_selection_score": 1.0,
+      "escalation_score": 1.0,
+      "threat_detection_score": 1.0,
+      "composite_score": 1.0,
+      "passed": true,
+      "failure_type": ""
+    },
+    {
+      "test_case_id": "test_004",
+      "category": "no_threat",
+      "expected_tools": [],
+      "actual_tools": [],
+      "expected_escalation": 0,
+      "actual_escalation": 0,
+      "tool_selection_score": 1.0,
+      "escalation_score": 1.0,
+      "threat_detection_score": 1.0,
+      "composite_score": 1.0,
+      "passed": true,
+      "failure_type": ""
+    },
+    {
+      "test_case_id": "test_005",
+      "category": "no_threat",
+      "expected_tools": [],
+      "actual_tools": [],
+      "expected_escalation": 0,
+      "actual_escalation": 0,
+      "tool_selection_score": 1.0,
+      "escalation_score": 1.0,
+      "threat_detection_score": 1.0,
+      "composite_score": 1.0,
+      "passed": true,
+      "failure_type": ""
+    },
+    {
+      "test_case_id": "test_006",
+      "category": "single_low_threat",
+      "expected_tools": [
+        "trackerLight"
+      ],
+      "actual_tools": [],
+      "expected_escalation": 1,
+      "actual_escalation": 0,
+      "tool_selection_score": 0.0,
+      "escalation_score": 0.7,
+      "threat_detection_score": -3.0,
+      "composite_score": 0.21,
+      "passed": false,
+      "failure_type": "missed_threat"
+    },
+    {
+      "test_case_id": "test_007",
+      "category": "single_low_threat",
+      "expected_tools": [
+        "trackerLight"
+      ],
+      "actual_tools": [],
+      "expected_escalation": 1,
+      "actual_escalation": 0,
+      "tool_selection_score": 0.0,
+      "escalation_score": 0.7,
+      "threat_detection_score": -3.0,
+      "composite_score": 0.21,
+      "passed": false,
+      "failure_type": "missed_threat"
+    },
+    {
+      "test_case_id": "test_008",
+      "category": "single_low_threat",
+      "expected_tools": [
+        "trackerLight"
+      ],
+      "actual_tools": [],
+      "expected_escalation": 1,
+      "actual_escalation": 0,
+      "tool_selection_score": 0.0,
+      "escalation_score": 0.7,
+      "threat_detection_score": -3.0,
+      "composite_score": 0.21,
+      "passed": false,
+      "failure_type": "missed_threat"
+    },
+    {
+      "test_case_id": "test_009",
+      "category": "single_low_threat",
+      "expected_tools": [
+        "trackerLight"
+      ],
+      "actual_tools": [],
+      "expected_escalation": 1,
+      "actual_escalation": 0,
+      "tool_selection_score": 0.0,
+      "escalation_score": 0.7,
+      "threat_detection_score": -3.0,
+      "composite_score": 0.21,
+      "passed": false,
+      "failure_type": "missed_threat"
+    },
+    {
+      "test_case_id": "test_010",
+      "category": "single_low_threat",
+      "expected_tools": [
+        "trackerLight"
+      ],
+      "actual_tools": [
+        "trackerLight",
+        "audibleWarning"
+      ],
+      "expected_escalation": 1,
+      "actual_escalation": 2,
+      "tool_selection_score": 0.35,
+      "escalation_score": 0.7,
+      "threat_detection_score": 1.0,
+      "composite_score": 0.6499999999999999,
+      "passed": false,
+      "failure_type": "wrong_tool"
+    },
+    {
+      "test_case_id": "test_011",
+      "category": "single_high_threat",
+      "expected_tools": [
+        "humanOperator",
+        "callPatrol"
+      ],
+      "actual_tools": [],
+      "expected_escalation": 5,
+      "actual_escalation": 0,
+      "tool_selection_score": 0.0,
+      "escalation_score": 0.0,
+      "threat_detection_score": -3.0,
+      "composite_score": 0.0,
+      "passed": false,
+      "failure_type": "missed_high_threat"
+    },
+    {
+      "test_case_id": "test_012",
+      "category": "single_high_threat",
+      "expected_tools": [
+        "humanOperator",
+        "callPatrol"
+      ],
+      "actual_tools": [],
+      "expected_escalation": 5,
+      "actual_escalation": 0,
+      "tool_selection_score": 0.0,
+      "escalation_score": 0.0,
+      "threat_detection_score": -3.0,
+      "composite_score": 0.0,
+      "passed": false,
+      "failure_type": "missed_high_threat"
+    },
+    {
+      "test_case_id": "test_013",
+      "category": "single_high_threat",
+      "expected_tools": [
+        "humanOperator",
+        "callPatrol"
+      ],
+      "actual_tools": [
+        "trackerLight",
+        "audibleWarning",
+        "strobeLight"
+      ],
+      "expected_escalation": 5,
+      "actual_escalation": 3,
+      "tool_selection_score": 0.0,
+      "escalation_score": 0.4,
+      "threat_detection_score": 1.0,
+      "composite_score": 0.42,
+      "passed": false,
+      "failure_type": "wrong_tool"
+    },
+    {
+      "test_case_id": "test_014",
+      "category": "single_high_threat",
+      "expected_tools": [
+        "humanOperator",
+        "callPatrol"
+      ],
+      "actual_tools": [],
+      "expected_escalation": 5,
+      "actual_escalation": 0,
+      "tool_selection_score": 0.0,
+      "escalation_score": 0.0,
+      "threat_detection_score": -3.0,
+      "composite_score": 0.0,
+      "passed": false,
+      "failure_type": "missed_high_threat"
+    },
+    {
+      "test_case_id": "test_015",
+      "category": "single_high_threat",
+      "expected_tools": [
+        "humanOperator",
+        "callPatrol"
+      ],
+      "actual_tools": [
+        "trackerLight",
+        "audibleWarning",
+        "strobeLight",
+        "humanOperator",
+        "callPatrol"
+      ],
+      "expected_escalation": 5,
+      "actual_escalation": 5,
+      "tool_selection_score": 0.27999999999999997,
+      "escalation_score": 1.0,
+      "threat_detection_score": 1.0,
+      "composite_score": 0.712,
+      "passed": true,
+      "failure_type": ""
+    },
+    {
+      "test_case_id": "test_016",
+      "category": "animal_false_positive",
+      "expected_tools": [],
+      "actual_tools": [],
+      "expected_escalation": 0,
+      "actual_escalation": 0,
+      "tool_selection_score": 1.0,
+      "escalation_score": 1.0,
+      "threat_detection_score": 1.0,
+      "composite_score": 1.0,
+      "passed": true,
+      "failure_type": ""
+    },
+    {
+      "test_case_id": "test_017",
+      "category": "animal_false_positive",
+      "expected_tools": [],
+      "actual_tools": [],
+      "expected_escalation": 0,
+      "actual_escalation": 0,
+      "tool_selection_score": 1.0,
+      "escalation_score": 1.0,
+      "threat_detection_score": 1.0,
+      "composite_score": 1.0,
+      "passed": true,
+      "failure_type": ""
+    },
+    {
+      "test_case_id": "test_018",
+      "category": "animal_false_positive",
+      "expected_tools": [],
+      "actual_tools": [],
+      "expected_escalation": 0,
+      "actual_escalation": 0,
+      "tool_selection_score": 1.0,
+      "escalation_score": 1.0,
+      "threat_detection_score": 1.0,
+      "composite_score": 1.0,
+      "passed": true,
+      "failure_type": ""
+    },
+    {
+      "test_case_id": "test_019",
+      "category": "animal_false_positive",
+      "expected_tools": [],
+      "actual_tools": [],
+      "expected_escalation": 0,
+      "actual_escalation": 0,
+      "tool_selection_score": 1.0,
+      "escalation_score": 1.0,
+      "threat_detection_score": 1.0,
+      "composite_score": 1.0,
+      "passed": true,
+      "failure_type": ""
+    },
+    {
+      "test_case_id": "test_020",
+      "category": "animal_false_positive",
+      "expected_tools": [],
+      "actual_tools": [],
+      "expected_escalation": 0,
+      "actual_escalation": 0,
+      "tool_selection_score": 1.0,
+      "escalation_score": 1.0,
+      "threat_detection_score": 1.0,
+      "composite_score": 1.0,
+      "passed": true,
+      "failure_type": ""
+    },
+    {
+      "test_case_id": "test_021",
+      "category": "persistent_threat",
+      "expected_tools": [
+        "audibleWarning"
+      ],
+      "actual_tools": [],
+      "expected_escalation": 2,
+      "actual_escalation": 0,
+      "tool_selection_score": 0.0,
+      "escalation_score": 0.4,
+      "threat_detection_score": -3.0,
+      "composite_score": 0.12,
+      "passed": false,
+      "failure_type": "missed_threat"
+    },
+    {
+      "test_case_id": "test_022",
+      "category": "persistent_threat",
+      "expected_tools": [
+        "strobeLight"
+      ],
+      "actual_tools": [],
+      "expected_escalation": 3,
+      "actual_escalation": 0,
+      "tool_selection_score": 0.0,
+      "escalation_score": 0.0,
+      "threat_detection_score": -3.0,
+      "composite_score": 0.0,
+      "passed": false,
+      "failure_type": "missed_threat"
+    },
+    {
+      "test_case_id": "test_023",
+      "category": "persistent_threat",
+      "expected_tools": [
+        "strobeLight",
+        "humanOperator"
+      ],
+      "actual_tools": [],
+      "expected_escalation": 4,
+      "actual_escalation": 0,
+      "tool_selection_score": 0.0,
+      "escalation_score": 0.0,
+      "threat_detection_score": -3.0,
+      "composite_score": 0.0,
+      "passed": false,
+      "failure_type": "missed_high_threat"
+    },
+    {
+      "test_case_id": "test_024",
+      "category": "persistent_threat",
+      "expected_tools": [
+        "humanOperator",
+        "callPatrol"
+      ],
+      "actual_tools": [],
+      "expected_escalation": 5,
+      "actual_escalation": 0,
+      "tool_selection_score": 0.0,
+      "escalation_score": 0.0,
+      "threat_detection_score": -3.0,
+      "composite_score": 0.0,
+      "passed": false,
+      "failure_type": "missed_high_threat"
+    },
+    {
+      "test_case_id": "test_025",
+      "category": "persistent_threat",
+      "expected_tools": [
+        "audibleWarning",
+        "strobeLight"
+      ],
+      "actual_tools": [],
+      "expected_escalation": 3,
+      "actual_escalation": 0,
+      "tool_selection_score": 0.0,
+      "escalation_score": 0.0,
+      "threat_detection_score": -3.0,
+      "composite_score": 0.0,
+      "passed": false,
+      "failure_type": "missed_threat"
+    }
+  ]
+}

@@ -237,6 +237,9 @@ def parse_tools_from_history(history_data: Dict) -> List[str]:
     messages = history_data.get('messages', [])
     
     for message in messages:
+        if message.get('metadata'):
+            # already analyzed in previous run
+            continue
         # Look for assistant messages with tool_calls
         if message.get('role') == 'assistant':
             tool_calls = message.get('tool_calls', [])
@@ -265,7 +268,12 @@ def parse_tools_from_history_file(history_file: Path) -> List[str]:
     try:
         with open(history_file, 'r') as f:
             history_data = json.load(f)
-        return parse_tools_from_history(history_data)
+        result = parse_tools_from_history(history_data)
+        for message in history_data.get('messages', []):
+            message["metadata"] = "analyzed"
+        with open(history_file, 'w') as f:
+            json.dump(history_data, f, indent=4)
+        return result
     except Exception as e:
         print(f"Warning: Failed to load history file {history_file}: {e}")
         return []

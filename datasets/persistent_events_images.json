@@ -1,0 +1,298 @@
+[
+    {
+        "category": "no_threat",
+        "cnn_probabilities": {
+            "animal": 0.0500000000000000028,
+            "background": 0.92000000000000004,
+            "person": 0.0200000000000000004,
+            "vehicle": 0.0100000000000000002
+        },
+        "ground_truth": {
+            "expected_escalation_level": 0,
+            "expected_tools": [],
+            "threat_level": "none"
+        },
+        "id": "test_001",
+        "image_path": "images/n01784675_27588.jpg",
+        "keep_history": true,
+        "metadata": {
+            "description": "Clear background, no entities of interest"
+        },
+        "prompt": "Analyze this image from a border surveillance camera."
+    },
+    {
+        "category": "no_threat",
+        "cnn_probabilities": {
+            "animal": 0.0299999999999999989,
+            "background": 0.939999999999999947,
+            "person": 0.0100000000000000002,
+            "vehicle": 0.0200000000000000004
+        },
+        "ground_truth": {
+            "expected_escalation_level": 0,
+            "expected_tools": [],
+            "threat_level": "none"
+        },
+        "id": "test_002",
+        "image_path": "images/n03785016_2627.jpg",
+        "keep_history": true,
+        "metadata": {
+            "description": "Clear background with very low detection confidence"
+        },
+        "prompt": "Analyze this image from a border surveillance camera."
+    },
+    {
+        "category": "single_low_threat",
+        "cnn_probabilities": {
+            "animal": 0.0700000000000000067,
+            "background": 0.0800000000000000017,
+            "person": 0.800000000000000044,
+            "vehicle": 0.0500000000000000028
+        },
+        "ground_truth": {
+            "expected_escalation_level": 1,
+            "expected_tools": [
+                "trackerLight"
+            ],
+            "threat_level": "low"
+        },
+        "id": "test_009",
+        "image_path": "images/n02096437_2925.jpg",
+        "keep_history": true,
+        "metadata": {
+            "description": "Person standing still near border"
+        },
+        "prompt": "Analyze this image from a border surveillance camera. A single person is standing near the border marker, not exhibiting any threatening behavior."
+    },
+    {
+        "category": "single_low_threat",
+        "cnn_probabilities": {
+            "animal": 0.0899999999999999967,
+            "background": 0.0700000000000000067,
+            "person": 0.770000000000000018,
+            "vehicle": 0.0700000000000000067
+        },
+        "ground_truth": {
+            "expected_escalation_level": 1,
+            "expected_tools": [
+                "trackerLight"
+            ],
+            "threat_level": "low"
+        },
+        "id": "test_010",
+        "image_path": "images/n02089078_695.jpg",
+        "keep_history": true,
+        "metadata": {
+            "description": "Person in surveillance area, appears legitimate"
+        },
+        "prompt": "Analyze this image from a border surveillance camera. A single person is detected in the surveillance area, appearing to be a legitimate traveler."
+    },
+    {
+        "category": "single_high_threat",
+        "cnn_probabilities": {
+            "animal": 0.0100000000000000002,
+            "background": 0.0200000000000000004,
+            "person": 0.949999999999999956,
+            "vehicle": 0.0200000000000000004
+        },
+        "ground_truth": {
+            "expected_escalation_level": 3,
+            "expected_tools": [
+                "trackerLight",
+                "strobeLight"
+            ],
+            "threat_level": "high"
+        },
+        "id": "test_011_medium",
+        "image_path": "images/n02643566_3839.jpg",
+        "keep_history": true,
+        "metadata": {
+            "description": "Travler reclassified as unknown threat with unknown intent near border"
+        },
+        "prompt": "Analyze this image from a border surveillance camera. Threat indicators are present - travler reclassified as unknown intentions near the border fence."
+    },
+    {
+        "category": "single_high_threat",
+        "cnn_probabilities": {
+            "animal": 0.0100000000000000002,
+            "background": 0.0200000000000000004,
+            "person": 0.949999999999999956,
+            "vehicle": 0.0200000000000000004
+        },
+        "ground_truth": {
+            "expected_escalation_level": 5,
+            "expected_tools": [
+                "humanOperator",
+                "callPatrol"
+            ],
+            "threat_level": "high"
+        },
+        "id": "test_011_high",
+        "image_path": "images/n01443537_3614.jpg",
+        "keep_history": true,
+        "metadata": {
+            "description": "Person with hostile intent near border"
+        },
+        "prompt": "Analyze this image from a border surveillance camera. High-threat indicators are present - person with hostile intent near the border fence."
+    },
+    {
+        "category": "animal_false_positive",
+        "cnn_probabilities": {
+            "animal": 0.800000000000000044,
+            "background": 0.0299999999999999989,
+            "person": 0.149999999999999994,
+            "vehicle": 0.0200000000000000004
+        },
+        "ground_truth": {
+            "expected_escalation_level": 0,
+            "expected_tools": [],
+            "threat_level": "none"
+        },
+        "id": "test_016",
+        "image_path": "images/n02089078_1287.jpg",
+        "keep_history": true,
+        "metadata": {
+            "description": "Wildlife (deer) near border"
+        },
+        "prompt": "Analyze this image from a border surveillance camera. An animal is detected near the border - appears to be a deer."
+    },
+    {
+        "category": "animal_false_positive",
+        "cnn_probabilities": {
+            "animal": 0.819999999999999951,
+            "background": 0.0299999999999999989,
+            "person": 0.119999999999999996,
+            "vehicle": 0.0299999999999999989
+        },
+        "ground_truth": {
+            "expected_escalation_level": 0,
+            "expected_tools": [],
+            "threat_level": "none"
+        },
+        "id": "test_017",
+        "image_path": "images/n02356798_2671.jpg",
+        "keep_history": true,
+        "metadata": {
+            "description": "Wildlife (coyote) in area"
+        },
+        "prompt": "Analyze this image from a border surveillance camera. Wildlife is detected in the area - appears to be a coyote or similar animal."
+    },
+    {
+        "category": "single_high_threat",
+        "cnn_probabilities": {
+            "animal": 0.0200000000000000004,
+            "background": 0.0200000000000000004,
+            "person": 0.930000000000000049,
+            "vehicle": 0.0299999999999999989
+        },
+        "ground_truth": {
+            "expected_escalation_level": 2,
+            "expected_tools": [
+                "trackerLight"
+            ],
+            "threat_level": "high"
+        },
+        "id": "test_013_1",
+        "image_path": "images/n02643566_13731.jpg",
+        "keep_history": true,
+        "metadata": {
+            "description": "Person with cutting equipment near fence"
+        },
+        "prompt": "Analyze this image from a border surveillance camera. A person is carrying unknown equipment but is at a distance away from the border."
+    },
+    {
+        "category": "single_high_threat",
+        "cnn_probabilities": {
+            "animal": 0.0200000000000000004,
+            "background": 0.0200000000000000004,
+            "person": 0.930000000000000049,
+            "vehicle": 0.0299999999999999989
+        },
+        "ground_truth": {
+            "expected_escalation_level": 3,
+            "expected_tools": [
+                "strobeLight"
+            ],
+            "threat_level": "high"
+        },
+        "id": "test_013_2",
+        "image_path": "images/n01443537_7778.jpg",
+        "keep_history": true,
+        "metadata": {
+            "description": "Person with cutting equipment near fence"
+        },
+        "prompt": "Analyze this image from a border surveillance camera. A person is carrying unknown equipment at a distance from the border. Moving towards the border."
+    },
+    {
+        "category": "single_high_threat",
+        "cnn_probabilities": {
+            "animal": 0.0200000000000000004,
+            "background": 0.0200000000000000004,
+            "person": 0.930000000000000049,
+            "vehicle": 0.0299999999999999989
+        },
+        "ground_truth": {
+            "expected_escalation_level": 3,
+            "expected_tools": [
+                "humanOperator",
+                "callPatrol"
+            ],
+            "threat_level": "high"
+        },
+        "id": "test_013_2",
+        "image_path": "images/n02655020_10174.jpg",
+        "keep_history": true,
+        "metadata": {
+            "description": "Person with cutting equipment near fence"
+        },
+        "prompt": "Analyze this image from a border surveillance camera. A person is carrying unknown equipment at a distance from the border. Moving towards the border."
+    },
+    {
+        "category": "single_high_threat",
+        "cnn_probabilities": {
+            "animal": 0.0200000000000000004,
+            "background": 0.0200000000000000004,
+            "person": 0.930000000000000049,
+            "vehicle": 0.0299999999999999989
+        },
+        "ground_truth": {
+            "expected_escalation_level": 5,
+            "expected_tools": [
+                "humanOperator",
+                "callPatrol"
+            ],
+            "threat_level": "high"
+        },
+        "id": "test_013_3",
+        "image_path": "images/n02641379_17361.jpg",
+        "keep_history": true,
+        "metadata": {
+            "description": "Person with cutting equipment near fence"
+        },
+        "prompt": "Analyze this image from a border surveillance camera. A person is carrying unknown equipment and moving fast towards the border."
+    },
+    {
+        "category": "single_high_threat",
+        "cnn_probabilities": {
+            "animal": 0.0100000000000000002,
+            "background": 0.0100000000000000002,
+            "person": 0.959999999999999964,
+            "vehicle": 0.0200000000000000004
+        },
+        "ground_truth": {
+            "expected_escalation_level": 5,
+            "expected_tools": [
+                "humanOperator",
+                "callPatrol"
+            ],
+            "threat_level": "high"
+        },
+        "id": "test_015",
+        "image_path": "images/n02655020_1208.jpg",
+        "keep_history": true,
+        "metadata": {
+            "description": "Person cutting through border fence"
+        },
+        "prompt": "Analyze this image from a border surveillance camera. A person is actively tampering with the border fence, appear to be cutting through."
+    }
+]

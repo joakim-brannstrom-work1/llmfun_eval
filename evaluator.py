@@ -47,12 +47,12 @@ class AgentResponse:
 
 def agent_cleanup(keep_history):
     """Clean the agent workspace and history"""
-    if not keep_history and LLMFUN_HISTORY_PATH.exists:
+    if not keep_history and LLMFUN_HISTORY_PATH.exists():
         LLMFUN_HISTORY_PATH.unlink()
 
     for file in LLMFUN_WORKAREA.glob('*.jpg'):
-        current = os.stat(str(dst_path)).st_mode
-        os.chmod(str(dst_path), current | stat.S_IWUSR)
+        current = os.stat(str(file)).st_mode
+        os.chmod(str(file), current | stat.S_IWUSR)
         file.unlink()
 
 

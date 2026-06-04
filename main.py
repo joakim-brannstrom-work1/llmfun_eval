@@ -40,7 +40,7 @@ def run_evaluation(
     
     responses = []
 
-    agent_cleanup(keep_history: False)
+    agent_cleanup(keep_history=False)
     
     for i, test_case in enumerate(test_cases):
         if verbose:

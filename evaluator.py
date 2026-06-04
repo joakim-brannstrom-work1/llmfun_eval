@@ -12,6 +12,7 @@ import json
 import re
 import time
 import shutil
+import os, stat
 from dataclasses import dataclass
 from typing import List, Optional, Dict
 from pathlib import Path
@@ -44,10 +45,16 @@ class AgentResponse:
     reasoning: str
     latency_ms: float
 
-def agent_cleanup():
+def agent_cleanup(keep_history):
     """Clean the agent workspace and history"""
-    if LLMFUN_HISTORY_PATH.exists:
+    if not keep_history and LLMFUN_HISTORY_PATH.exists:
         LLMFUN_HISTORY_PATH.unlink()
+
+    for file in LLMFUN_WORKAREA.glob('*.jpg'):
+        current = os.stat(str(dst_path)).st_mode
+        os.chmod(str(dst_path), current | stat.S_IWUSR)
+        file.unlink()
+
 
 def call_llmfun_agent(prompt: str, history_file: Optional[Path] = None) -> AgentResponse:
     """Call the llmfun agent with a prompt.
@@ -389,8 +396,6 @@ def copy_image_to_workarea(image_path: str, datasets_dir: Path) -> Optional[str]
     if not image_path:
         return None
 
-    import os, stat
-    
     try:
         # Ensure workarea exists
         LLMFUN_WORKAREA.mkdir(parents=True, exist_ok=True)
@@ -431,7 +436,7 @@ def evaluate_test_case(test_case, history_file: Optional[Path] = None, datasets_
         AgentResponse from the evaluation
     """
 
-    agent_cleanup()
+    agent_cleanup(test_case.keep_history)
 
     # Build the prompt from test case
     prompt = build_prompt(test_case)
@@ -440,7 +445,7 @@ def evaluate_test_case(test_case, history_file: Optional[Path] = None, datasets_
     if test_case.image_path and datasets_dir:
         workarea_path = copy_image_to_workarea(test_case.image_path, datasets_dir)
         if workarea_path:
-            prompt += f" Path to image: {str(Path(workarea_path).name)}"
+            prompt += f" Use loadImageApi to analyze at path {str(Path(workarea_path).name)}"
     
     # Call the agent and extract tool calls from the saved history
     return call_llmfun_agent_with_history(prompt)

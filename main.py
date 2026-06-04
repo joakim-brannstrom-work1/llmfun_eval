@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import List
 
 from test_loader import TestCase, load_test_cases_from_file, load_test_dataset
-from evaluator import evaluate_test_case, AgentResponse
+from evaluator import evaluate_test_case, AgentResponse, agent_cleanup
 from scorer import evaluate_batch, save_results
 
 
@@ -39,6 +39,8 @@ def run_evaluation(
         print(f"Running evaluation on {len(test_cases)} test cases...")
     
     responses = []
+
+    agent_cleanup(keep_history: False)
     
     for i, test_case in enumerate(test_cases):
         if verbose:

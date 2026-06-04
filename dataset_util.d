@@ -35,20 +35,79 @@ struct UserConfig {
 }
 
 int appMain(UserConfig uconf, UserConfig.DatasetImagesConfig conf) {
+    import std.random : randomSample;
+
+    void copyFile(string src) {
+        import std.file : remove, symlink;
+
+        auto dst = format!"%s/%s"(conf.dstImageDir, src.baseName);
+        if (dst.exists)
+            remove(dst);
+        symlink(src, dst);
+    }
+
+    string category(string filename) {
+        return filename.split("_")[0];
+    }
+
+    JSONValue doCategory(string[] data, JSONValue j) {
+        auto img = data.randomSample(1).array[0];
+        copyFile(img);
+        j["image_path"] = format!"images/%s"(img.baseName);
+        return j;
+    }
+
     logger.info("Reading ", conf.datasetJson);
-    auto dataset = readText(conf.datasetJson).parseJSON;
+    auto inputDataset = readText(conf.datasetJson).parseJSON;
+
+    auto allImages = dirEntries(conf.srcImageDir, SpanMode.shallow).filter!(
+            a => a.extension == ".jpg")
+        .map!(a => a.name)
+        .array;
+
+    auto friends = allImages.filter!(
+            a => FOUR_LEGS.canFind(category(a.baseName.stripExtension))).array;
+    auto foes = allImages.filter!(a => FISH.canFind(category(a.baseName.stripExtension))).array;
+    auto others = allImages.filter!(a => OTHER.canFind(category(a.baseName.stripExtension))).array;
+
+    auto output = JSONValue(typeof(JSONValue.emptyObject)[].init);
+    foreach (j; inputDataset.array) {
+        if (j["category"].str.among("no_threat")) {
+            j = doCategory(others, j);
+        } else if (j["category"].str.among("single_low_threat")) {
+            j = doCategory(friends, j);
+        } else if (j["category"].str.among("single_high_threat")) {
+            j = doCategory(foes, j);
+        } else if (j["category"].str.among("persistent_threat")) {
+            j = doCategory(foes, j);
+        } else if (j["category"].str.among("animal_false_positive")) {
+            j = doCategory(friends, j);
+        } else {
+            logger.warningf("Unknown category %s: %s", j["category"], j);
+            return 1;
+        }
+        output.array ~= j;
+    }
+
+    File(format!"%s_images.json"(conf.datasetJson.stripExtension), "w").writeln(
+            output.toPrettyString(JSONOptions.doNotEscapeSlashes));
 
     return 0;
 }
 
+// friend
 auto FOUR_LEGS = [
     "n02089078", "n02089973", "n02085782", "n02091635", "n02087046",
     "n02095889", "n02096437", "n02356798", "n02398521", "n02130308"
 ];
+
+// foe
 auto FISH = [
     "n01443537", "n01484850", "n01494475", "n02640242", "n02641379",
     "n02643566", "n02655020", "n02066245"
 ];
+
+// unknown
 auto OTHER = [
     "n01704323", "n02481823", "n03785016", "n02165105", "n04399382", "n01784675"
 ];

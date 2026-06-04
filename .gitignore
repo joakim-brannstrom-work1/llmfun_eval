@@ -24,3 +24,4 @@ target/
 *.pyc
 
 evaluation_framework
+datasets/images

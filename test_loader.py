@@ -30,6 +30,7 @@ class TestCase:
     cnn_probabilities: Dict[str, float]
     ground_truth: GroundTruth
     metadata: Optional[Dict] = None
+    keep_history: bool
 
 
 def load_test_cases_from_file(filepath: Path) -> List[TestCase]:
@@ -70,7 +71,8 @@ def load_test_cases_from_file(filepath: Path) -> List[TestCase]:
             prompt=case_data.get('prompt', case_data.get('user_prompt', '')),
             cnn_probabilities=case_data.get('cnn_probabilities', {}),
             ground_truth=ground_truth,
-            metadata=case_data.get('metadata')
+            metadata=case_data.get('metadata'),
+            keep_history=case_data.get('keep_history', False)
         )
         test_cases.append(test_case)
     

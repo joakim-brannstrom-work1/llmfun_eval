@@ -46,12 +46,7 @@ def load_test_cases_from_file(filepath: Path) -> List[TestCase]:
         data = json.load(f)
     
     test_cases = []
-    
-    # Handle both single test case and list of test cases
-    if isinstance(data, list):
-        cases_data = data
-    else:
-        cases_data = [data]
+    cases_data = data['dataset']
     
     for case_data in cases_data:
         gt_data = case_data.get('ground_truth', case_data.get('expected', {}))

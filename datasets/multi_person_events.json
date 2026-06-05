@@ -1,0 +1,128 @@
+[
+    {
+        "id": "multi_001",
+        "category": "multi_person_low",
+        "image_path": "",
+        "prompt": "Analyze this image from a border surveillance camera. Three people are standing together near the border checkpoint, appearing to be waiting in line.",
+        "keep_history": true,
+        "cnn_probabilities": {
+            "person": 0.89,
+            "vehicle": 0.02,
+            "animal": 0.03,
+            "background": 0.06
+        },
+        "ground_truth": {
+            "threat_level": "low",
+            "expected_tools": ["trackerLight"],
+            "expected_escalation_level": 1
+        },
+        "metadata": {
+            "description": "Group of 3 people waiting at checkpoint, no threat behavior"
+        }
+    },
+    {
+        "id": "multi_002",
+        "category": "multi_person_medium",
+        "image_path": "",
+        "prompt": "Analyze this image from a border surveillance camera. Five people are gathered near the border fence, appearing to discuss something.",
+        "keep_history": true,
+        "cnn_probabilities": {
+            "person": 0.92,
+            "vehicle": 0.01,
+            "animal": 0.02,
+            "background": 0.05
+        },
+        "ground_truth": {
+            "threat_level": "medium",
+            "expected_tools": ["trackerLight", "audibleWarning"],
+            "expected_escalation_level": 2
+        },
+        "metadata": {
+            "description": "Group of 5 people near fence, unusual gathering"
+        }
+    },
+    {
+        "id": "multi_003",
+        "category": "multi_person_high",
+        "image_path": "",
+        "prompt": "Analyze this image from a border surveillance camera. Eight people are running towards the border fence together.",
+        "keep_history": true,
+        "cnn_probabilities": {
+            "person": 0.95,
+            "vehicle": 0.01,
+            "animal": 0.01,
+            "background": 0.03
+        },
+        "ground_truth": {
+            "threat_level": "high",
+            "expected_tools": ["humanOperator", "callPatrol"],
+            "expected_escalation_level": 5
+        },
+        "metadata": {
+            "description": "Large group running towards border, mass incursion attempt"
+        }
+    },
+    {
+        "id": "multi_004",
+        "category": "multi_person_staged",
+        "image_path": "",
+        "prompt": "Analyze this image from a border surveillance camera. Two people are creating a distraction while a third is approaching the fence.",
+        "keep_history": true,
+        "cnn_probabilities": {
+            "person": 0.91,
+            "vehicle": 0.02,
+            "animal": 0.02,
+            "background": 0.05
+        },
+        "ground_truth": {
+            "threat_level": "high",
+            "expected_tools": ["strobeLight", "humanOperator"],
+            "expected_escalation_level": 4
+        },
+        "metadata": {
+            "description": "Coordinated group with distraction tactic"
+        }
+    },
+    {
+        "id": "multi_005",
+        "category": "multi_person_family",
+        "image_path": "",
+        "prompt": "Analyze this image from a border surveillance camera. A family with children is approaching the border checkpoint.",
+        "keep_history": true,
+        "cnn_probabilities": {
+            "person": 0.88,
+            "vehicle": 0.03,
+            "animal": 0.02,
+            "background": 0.07
+        },
+        "ground_truth": {
+            "threat_level": "low",
+            "expected_tools": ["trackerLight"],
+            "expected_escalation_level": 1
+        },
+        "metadata": {
+            "description": "Family with children, likely migrants seeking asylum"
+        }
+    },
+    {
+        "id": "multi_006",
+        "category": "multi_person_scattered",
+        "image_path": "",
+        "prompt": "Analyze this image from a border surveillance camera. Four people are spread out in a line, walking parallel to the border.",
+        "keep_history": true,
+        "cnn_probabilities": {
+            "person": 0.85,
+            "vehicle": 0.03,
+            "animal": 0.04,
+            "background": 0.08
+        },
+        "ground_truth": {
+            "threat_level": "medium",
+            "expected_tools": ["trackerLight", "audibleWarning"],
+            "expected_escalation_level": 2
+        },
+        "metadata": {
+            "description": "Scattered group walking parallel to border, possible surveillance"
+        }
+    }
+]

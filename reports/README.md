@@ -10,7 +10,9 @@ note: The simplets test. Doesn't this work the more complex will not work.
 ## Dataset `25_common_events.json`
 llmfun: git commit f9bd2a1 2026-06-03
 
-- The test data contains more information in the prompt than it should do in a real case scenario such as: Analyze this image from a border surveillance camera. A single person is walking near the border marker in a non-threatening posture.
+- The test data contains more information in the prompt than it should not have compared to in a real case scenario such as:
+    - ok: "Analyze this image from a border surveillance camera."
+    - extra information in prompt: "A single person is walking near the border marker in a non-threatening posture."
 
 ## Result
 ```

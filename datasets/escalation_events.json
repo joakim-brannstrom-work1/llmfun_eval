@@ -1,212 +1,218 @@
-[
-    {
-        "id": "escalate_001",
-        "category": "escalation_level_1",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. A single person is standing near the border marker, not moving.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.72,
-            "vehicle": 0.08,
-            "animal": 0.10,
-            "background": 0.10
-        },
-        "ground_truth": {
-            "threat_level": "low",
-            "expected_tools": ["trackerLight"],
-            "expected_escalation_level": 1
-        },
-        "metadata": {
-            "description": "Level 1: Minimal threat, visible warning only"
-        }
+{
+    "config": {
+        "name": "Escalation Events",
+        "description": "Tests for understanding the escalation protocol and de-escalation"
     },
-    {
-        "id": "escalate_002",
-        "category": "escalation_level_2",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. A person is walking slowly towards the border fence.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.80,
-            "vehicle": 0.05,
-            "animal": 0.08,
-            "background": 0.07
+    "dataset": [
+        {
+            "id": "escalate_001",
+            "category": "escalation_level_1",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. A single person is standing near the border marker, not moving.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.72,
+                "vehicle": 0.08,
+                "animal": 0.10,
+                "background": 0.10
+            },
+            "ground_truth": {
+                "threat_level": "low",
+                "expected_tools": ["trackerLight"],
+                "expected_escalation_level": 1
+            },
+            "metadata": {
+                "description": "Level 1: Minimal threat, visible warning only"
+            }
         },
-        "ground_truth": {
-            "threat_level": "medium",
-            "expected_tools": ["trackerLight", "audibleWarning"],
-            "expected_escalation_level": 2
+        {
+            "id": "escalate_002",
+            "category": "escalation_level_2",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. A person is walking slowly towards the border fence.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.80,
+                "vehicle": 0.05,
+                "animal": 0.08,
+                "background": 0.07
+            },
+            "ground_truth": {
+                "threat_level": "medium",
+                "expected_tools": ["trackerLight", "audibleWarning"],
+                "expected_escalation_level": 2
+            },
+            "metadata": {
+                "description": "Level 2: Audible warning added"
+            }
         },
-        "metadata": {
-            "description": "Level 2: Audible warning added"
+        {
+            "id": "escalate_003",
+            "category": "escalation_level_3",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. A person is approaching the fence despite the audible warning.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.85,
+                "vehicle": 0.04,
+                "animal": 0.05,
+                "background": 0.06
+            },
+            "ground_truth": {
+                "threat_level": "high",
+                "expected_tools": ["trackerLight", "strobeLight"],
+                "expected_escalation_level": 3
+            },
+            "metadata": {
+                "description": "Level 3: Strobe light for non-compliance"
+            }
+        },
+        {
+            "id": "escalate_004",
+            "category": "escalation_level_4",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. A person is attempting to cut through the fence.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.93,
+                "vehicle": 0.02,
+                "animal": 0.02,
+                "background": 0.03
+            },
+            "ground_truth": {
+                "threat_level": "high",
+                "expected_tools": ["humanOperator"],
+                "expected_escalation_level": 4
+            },
+            "metadata": {
+                "description": "Level 4: Active breach, human operator required"
+            }
+        },
+        {
+            "id": "escalate_005",
+            "category": "escalation_level_5",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. Multiple people are rushing the border fence with tools.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.96,
+                "vehicle": 0.01,
+                "animal": 0.01,
+                "background": 0.02
+            },
+            "ground_truth": {
+                "threat_level": "critical",
+                "expected_tools": ["callPatrol"],
+                "expected_escalation_level": 5
+            },
+            "metadata": {
+                "description": "Level 5: Mass incursion, immediate patrol response"
+            }
+        },
+        {
+            "id": "escalate_006",
+            "category": "escalation_skip_warning",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. A person is carrying a weapon towards the border.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.91,
+                "vehicle": 0.03,
+                "animal": 0.02,
+                "background": 0.04
+            },
+            "ground_truth": {
+                "threat_level": "high",
+                "expected_tools": ["strobeLight", "humanOperator"],
+                "expected_escalation_level": 3
+            },
+            "metadata": {
+                "description": "Armed individual, skip to level 3"
+            }
+        },
+        {
+            "id": "escalate_007",
+            "category": "escalation_immediate_5",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. A vehicle is ramming through the border fence at high speed.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.10,
+                "vehicle": 0.88,
+                "animal": 0.01,
+                "background": 0.01
+            },
+            "ground_truth": {
+                "threat_level": "critical",
+                "expected_tools": ["callPatrol"],
+                "expected_escalation_level": 5
+            },
+            "metadata": {
+                "description": "Fence breach in progress, maximum response"
+            }
+        },
+        {
+            "id": "escalate_008",
+            "category": "escalation_deescalate",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. The person has stopped and is raising hands after strobe activation.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.82,
+                "vehicle": 0.03,
+                "animal": 0.05,
+                "background": 0.10
+            },
+            "ground_truth": {
+                "threat_level": "low",
+                "expected_tools": ["trackerLight"],
+                "expected_escalation_level": 1
+            },
+            "metadata": {
+                "description": "De-escalation: compliance shown, reduce response"
+            }
+        },
+        {
+            "id": "escalate_009",
+            "category": "escalation_reassess",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. After initial alert, the person has moved away from the border.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.65,
+                "vehicle": 0.10,
+                "animal": 0.15,
+                "background": 0.10
+            },
+            "ground_truth": {
+                "threat_level": "none",
+                "expected_tools": [],
+                "expected_escalation_level": 0
+            },
+            "metadata": {
+                "description": "Threat resolved, no further action needed"
+            }
+        },
+        {
+            "id": "escalate_010",
+            "category": "escalation_incorrect_low",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. A person is standing peacefully at the checkpoint waiting area.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.70,
+                "vehicle": 0.08,
+                "animal": 0.12,
+                "background": 0.10
+            },
+            "ground_truth": {
+                "threat_level": "none",
+                "expected_tools": [],
+                "expected_escalation_level": 0
+            },
+            "metadata": {
+                "description": "Should not escalate - legitimate border crosser"
+            }
         }
-    },
-    {
-        "id": "escalate_003",
-        "category": "escalation_level_3",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. A person is approaching the fence despite the audible warning.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.85,
-            "vehicle": 0.04,
-            "animal": 0.05,
-            "background": 0.06
-        },
-        "ground_truth": {
-            "threat_level": "high",
-            "expected_tools": ["trackerLight", "strobeLight"],
-            "expected_escalation_level": 3
-        },
-        "metadata": {
-            "description": "Level 3: Strobe light for non-compliance"
-        }
-    },
-    {
-        "id": "escalate_004",
-        "category": "escalation_level_4",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. A person is attempting to cut through the fence.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.93,
-            "vehicle": 0.02,
-            "animal": 0.02,
-            "background": 0.03
-        },
-        "ground_truth": {
-            "threat_level": "high",
-            "expected_tools": ["humanOperator"],
-            "expected_escalation_level": 4
-        },
-        "metadata": {
-            "description": "Level 4: Active breach, human operator required"
-        }
-    },
-    {
-        "id": "escalate_005",
-        "category": "escalation_level_5",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. Multiple people are rushing the border fence with tools.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.96,
-            "vehicle": 0.01,
-            "animal": 0.01,
-            "background": 0.02
-        },
-        "ground_truth": {
-            "threat_level": "critical",
-            "expected_tools": ["callPatrol"],
-            "expected_escalation_level": 5
-        },
-        "metadata": {
-            "description": "Level 5: Mass incursion, immediate patrol response"
-        }
-    },
-    {
-        "id": "escalate_006",
-        "category": "escalation_skip_warning",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. A person is carrying a weapon towards the border.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.91,
-            "vehicle": 0.03,
-            "animal": 0.02,
-            "background": 0.04
-        },
-        "ground_truth": {
-            "threat_level": "high",
-            "expected_tools": ["strobeLight", "humanOperator"],
-            "expected_escalation_level": 3
-        },
-        "metadata": {
-            "description": "Armed individual, skip to level 3"
-        }
-    },
-    {
-        "id": "escalate_007",
-        "category": "escalation_immediate_5",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. A vehicle is ramming through the border fence at high speed.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.10,
-            "vehicle": 0.88,
-            "animal": 0.01,
-            "background": 0.01
-        },
-        "ground_truth": {
-            "threat_level": "critical",
-            "expected_tools": ["callPatrol"],
-            "expected_escalation_level": 5
-        },
-        "metadata": {
-            "description": "Fence breach in progress, maximum response"
-        }
-    },
-    {
-        "id": "escalate_008",
-        "category": "escalation_deescalate",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. The person has stopped and is raising hands after strobe activation.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.82,
-            "vehicle": 0.03,
-            "animal": 0.05,
-            "background": 0.10
-        },
-        "ground_truth": {
-            "threat_level": "low",
-            "expected_tools": ["trackerLight"],
-            "expected_escalation_level": 1
-        },
-        "metadata": {
-            "description": "De-escalation: compliance shown, reduce response"
-        }
-    },
-    {
-        "id": "escalate_009",
-        "category": "escalation_reassess",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. After initial alert, the person has moved away from the border.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.65,
-            "vehicle": 0.10,
-            "animal": 0.15,
-            "background": 0.10
-        },
-        "ground_truth": {
-            "threat_level": "none",
-            "expected_tools": [],
-            "expected_escalation_level": 0
-        },
-        "metadata": {
-            "description": "Threat resolved, no further action needed"
-        }
-    },
-    {
-        "id": "escalate_010",
-        "category": "escalation_incorrect_low",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. A person is standing peacefully at the checkpoint waiting area.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.70,
-            "vehicle": 0.08,
-            "animal": 0.12,
-            "background": 0.10
-        },
-        "ground_truth": {
-            "threat_level": "none",
-            "expected_tools": [],
-            "expected_escalation_level": 0
-        },
-        "metadata": {
-            "description": "Should not escalate - legitimate border crosser"
-        }
-    }
-]
+    ]
+}

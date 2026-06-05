@@ -1,4 +1,9 @@
-[
+{
+    "config": {
+        "name": "25 Common Events",
+        "description": "Common test cases for basic threat detection"
+    },
+    "dataset": [
     {
         "id": "test_001",
         "category": "no_threat",
@@ -495,8 +500,8 @@
             "expected_tools": ["audibleWarning", "strobeLight"],
             "expected_escalation_level": 3
         },
-        "metadata": {
-            "description": "Repeated presence after initial alerts"
+"description": "Repeated presence after initial alerts"
         }
-    }
-]
+    ]
+}
+}

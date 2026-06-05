@@ -1,149 +1,155 @@
-[
-    {
-        "id": "uncertain_001",
-        "category": "uncertain_mixed",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. The detection system shows ambiguous results - something is detected but classification is unclear.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.45,
-            "vehicle": 0.20,
-            "animal": 0.25,
-            "background": 0.10
-        },
-        "ground_truth": {
-            "threat_level": "low",
-            "expected_tools": ["trackerLight"],
-            "expected_escalation_level": 1
-        },
-        "metadata": {
-            "description": "Mixed detection, likely person but unclear - request visual confirmation"
-        }
+{
+    "config": {
+        "name": "Uncertain Events",
+        "description": "Tests for ambiguous CNN probabilities and edge cases"
     },
-    {
-        "id": "uncertain_002",
-        "category": "uncertain_shadow",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. Low light conditions create shadows that may be misinterpreted as persons.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.35,
-            "vehicle": 0.10,
-            "animal": 0.15,
-            "background": 0.40
+    "dataset": [
+        {
+            "id": "uncertain_001",
+            "category": "uncertain_mixed",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. The detection system shows ambiguous results - something is detected but classification is unclear.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.45,
+                "vehicle": 0.20,
+                "animal": 0.25,
+                "background": 0.10
+            },
+            "ground_truth": {
+                "threat_level": "low",
+                "expected_tools": ["trackerLight"],
+                "expected_escalation_level": 1
+            },
+            "metadata": {
+                "description": "Mixed detection, likely person but unclear - request visual confirmation"
+            }
         },
-        "ground_truth": {
-            "threat_level": "none",
-            "expected_tools": [],
-            "expected_escalation_level": 0
+        {
+            "id": "uncertain_002",
+            "category": "uncertain_shadow",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. Low light conditions create shadows that may be misinterpreted as persons.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.35,
+                "vehicle": 0.10,
+                "animal": 0.15,
+                "background": 0.40
+            },
+            "ground_truth": {
+                "threat_level": "none",
+                "expected_tools": [],
+                "expected_escalation_level": 0
+            },
+            "metadata": {
+                "description": "False positive due to lighting, no actual threat"
+            }
         },
-        "metadata": {
-            "description": "False positive due to lighting, no actual threat"
+        {
+            "id": "uncertain_003",
+            "category": "uncertain_partial",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. Only partial silhouette visible through vegetation.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.55,
+                "vehicle": 0.05,
+                "animal": 0.30,
+                "background": 0.10
+            },
+            "ground_truth": {
+                "threat_level": "low",
+                "expected_tools": ["trackerLight"],
+                "expected_escalation_level": 1
+            },
+            "metadata": {
+                "description": "Partial visibility, likely person but need confirmation"
+            }
+        },
+        {
+            "id": "uncertain_004",
+            "category": "uncertain_weather",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. Heavy rain is affecting detection accuracy.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.30,
+                "vehicle": 0.15,
+                "animal": 0.20,
+                "background": 0.35
+            },
+            "ground_truth": {
+                "threat_level": "none",
+                "expected_tools": [],
+                "expected_escalation_level": 0
+            },
+            "metadata": {
+                "description": "Weather interference, no clear threat detected"
+            }
+        },
+        {
+            "id": "uncertain_005",
+            "category": "uncertain_occluded",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. Object partially hidden behind fence structure.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.50,
+                "vehicle": 0.08,
+                "animal": 0.12,
+                "background": 0.30
+            },
+            "ground_truth": {
+                "threat_level": "low",
+                "expected_tools": ["trackerLight"],
+                "expected_escalation_level": 1
+            },
+            "metadata": {
+                "description": "Occluded view, person likely but need visual confirmation"
+            }
+        },
+        {
+            "id": "uncertain_006",
+            "category": "uncertain_distance",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. Object at extreme distance, classification uncertain.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.40,
+                "vehicle": 0.25,
+                "animal": 0.20,
+                "background": 0.15
+            },
+            "ground_truth": {
+                "threat_level": "low",
+                "expected_tools": ["trackerLight"],
+                "expected_escalation_level": 1
+            },
+            "metadata": {
+                "description": "Distant object, need closer inspection"
+            }
+        },
+        {
+            "id": "uncertain_007",
+            "category": "uncertain_animal_person",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. Detection shows similar probability for person and large animal.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.42,
+                "vehicle": 0.05,
+                "animal": 0.48,
+                "background": 0.05
+            },
+            "ground_truth": {
+                "threat_level": "none",
+                "expected_tools": [],
+                "expected_escalation_level": 0
+            },
+            "metadata": {
+                "description": "Animal-person confusion, likely wildlife"
+            }
         }
-    },
-    {
-        "id": "uncertain_003",
-        "category": "uncertain_partial",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. Only partial silhouette visible through vegetation.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.55,
-            "vehicle": 0.05,
-            "animal": 0.30,
-            "background": 0.10
-        },
-        "ground_truth": {
-            "threat_level": "low",
-            "expected_tools": ["trackerLight"],
-            "expected_escalation_level": 1
-        },
-        "metadata": {
-            "description": "Partial visibility, likely person but need confirmation"
-        }
-    },
-    {
-        "id": "uncertain_004",
-        "category": "uncertain_weather",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. Heavy rain is affecting detection accuracy.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.30,
-            "vehicle": 0.15,
-            "animal": 0.20,
-            "background": 0.35
-        },
-        "ground_truth": {
-            "threat_level": "none",
-            "expected_tools": [],
-            "expected_escalation_level": 0
-        },
-        "metadata": {
-            "description": "Weather interference, no clear threat detected"
-        }
-    },
-    {
-        "id": "uncertain_005",
-        "category": "uncertain_occluded",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. Object partially hidden behind fence structure.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.50,
-            "vehicle": 0.08,
-            "animal": 0.12,
-            "background": 0.30
-        },
-        "ground_truth": {
-            "threat_level": "low",
-            "expected_tools": ["trackerLight"],
-            "expected_escalation_level": 1
-        },
-        "metadata": {
-            "description": "Occluded view, person likely but need visual confirmation"
-        }
-    },
-    {
-        "id": "uncertain_006",
-        "category": "uncertain_distance",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. Object at extreme distance, classification uncertain.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.40,
-            "vehicle": 0.25,
-            "animal": 0.20,
-            "background": 0.15
-        },
-        "ground_truth": {
-            "threat_level": "low",
-            "expected_tools": ["trackerLight"],
-            "expected_escalation_level": 1
-        },
-        "metadata": {
-            "description": "Distant object, need closer inspection"
-        }
-    },
-    {
-        "id": "uncertain_007",
-        "category": "uncertain_animal_person",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. Detection shows similar probability for person and large animal.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.42,
-            "vehicle": 0.05,
-            "animal": 0.48,
-            "background": 0.05
-        },
-        "ground_truth": {
-            "threat_level": "none",
-            "expected_tools": [],
-            "expected_escalation_level": 0
-        },
-        "metadata": {
-            "description": "Animal-person confusion, likely wildlife"
-        }
-    }
-]
+    ]
+}

@@ -1,4 +1,9 @@
-[
+{
+    "config": {
+        "name": "25 Common Events History With Images",
+        "description": "Common test cases with history and image paths"
+    },
+    "dataset": [
     {
         "category": "no_threat",
         "cnn_probabilities": {
@@ -555,11 +560,12 @@
             "threat_level": "medium"
         },
         "id": "test_025",
-        "image_path": "images/n02655020_2682.jpg",
-        "keep_history": true,
+"keep_history": true,
+        "prompt": "Analyze this image from a border surveillance camera. The same person that triggered earlier alerts is still present at the border after initial warnings. Use loadImageApi to analyze the image.",
         "metadata": {
             "description": "Repeated presence after initial alerts"
-        },
-        "prompt": "Analyze this image from a border surveillance camera. The same person that triggered earlier alerts is still present at the border after initial warnings."
-    }
+        }
+    ]
+}
 ]
+}

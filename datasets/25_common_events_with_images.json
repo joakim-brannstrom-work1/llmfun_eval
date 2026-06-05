@@ -1,4 +1,9 @@
-[
+{
+    "config": {
+        "name": "25 Common Events With Images",
+        "description": "Common test cases with image paths for multimodal evaluation"
+    },
+    "dataset": [
     {
         "category": "no_threat",
         "cnn_probabilities": {
@@ -534,7 +539,9 @@
         "image_path": "images/n01494475_3194.jpg",
         "metadata": {
             "description": "Repeated presence after initial alerts"
-        },
-        "prompt": "Analyze this image from a border surveillance camera. The same person that triggered earlier alerts is still present at the border after initial warnings. Use loadImageApi to analyze the image."
-    }
+"prompt": "Analyze this image from a border surveillance camera. The same person that triggered earlier alerts is still present at the border after initial warnings. Use loadImageApi to analyze the image."
+        }
+    ]
+}
 ]
+}

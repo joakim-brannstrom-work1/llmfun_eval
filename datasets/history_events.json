@@ -1,212 +1,218 @@
-[
-    {
-        "id": "history_001a",
-        "category": "history_baseline",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. A person is walking towards the border from the interior.",
-        "keep_history": false,
-        "cnn_probabilities": {
-            "person": 0.75,
-            "vehicle": 0.05,
-            "animal": 0.10,
-            "background": 0.10
-        },
-        "ground_truth": {
-            "threat_level": "low",
-            "expected_tools": ["trackerLight"],
-            "expected_escalation_level": 1
-        },
-        "metadata": {
-            "description": "Initial detection: person approaching border"
-        }
+{
+    "config": {
+        "name": "History Events",
+        "description": "Tests for temporal reasoning and tracking entities over time"
     },
-    {
-        "id": "history_001b",
-        "category": "history_escalation",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. The same person from previous frame is now running towards the fence.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.88,
-            "vehicle": 0.03,
-            "animal": 0.04,
-            "background": 0.05
+    "dataset": [
+        {
+            "id": "history_001a",
+            "category": "history_baseline",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. A person is walking towards the border from the interior.",
+            "keep_history": false,
+            "cnn_probabilities": {
+                "person": 0.75,
+                "vehicle": 0.05,
+                "animal": 0.10,
+                "background": 0.10
+            },
+            "ground_truth": {
+                "threat_level": "low",
+                "expected_tools": ["trackerLight"],
+                "expected_escalation_level": 1
+            },
+            "metadata": {
+                "description": "Initial detection: person approaching border"
+            }
         },
-        "ground_truth": {
-            "threat_level": "high",
-            "expected_tools": ["strobeLight", "humanOperator"],
-            "expected_escalation_level": 4
+        {
+            "id": "history_001b",
+            "category": "history_escalation",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. The same person from previous frame is now running towards the fence.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.88,
+                "vehicle": 0.03,
+                "animal": 0.04,
+                "background": 0.05
+            },
+            "ground_truth": {
+                "threat_level": "high",
+                "expected_tools": ["strobeLight", "humanOperator"],
+                "expected_escalation_level": 4
+            },
+            "metadata": {
+                "description": "Same person escalated to running, history shows approach pattern"
+            }
         },
-        "metadata": {
-            "description": "Same person escalated to running, history shows approach pattern"
+        {
+            "id": "history_002a",
+            "category": "history_baseline",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. A vehicle is parked near the border.",
+            "keep_history": false,
+            "cnn_probabilities": {
+                "person": 0.20,
+                "vehicle": 0.72,
+                "animal": 0.03,
+                "background": 0.05
+            },
+            "ground_truth": {
+                "threat_level": "low",
+                "expected_tools": ["trackerLight"],
+                "expected_escalation_level": 1
+            },
+            "metadata": {
+                "description": "Initial: vehicle parked near border"
+            }
+        },
+        {
+            "id": "history_002b",
+            "category": "history_waiting",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. The same vehicle has been stationary for 10 minutes.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.25,
+                "vehicle": 0.70,
+                "animal": 0.02,
+                "background": 0.03
+            },
+            "ground_truth": {
+                "threat_level": "medium",
+                "expected_tools": ["trackerLight", "audibleWarning"],
+                "expected_escalation_level": 2
+            },
+            "metadata": {
+                "description": "Vehicle waiting, unusual behavior"
+            }
+        },
+        {
+            "id": "history_002c",
+            "category": "history_departure",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. The vehicle is now departing but a person is visible near the fence.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.65,
+                "vehicle": 0.30,
+                "animal": 0.02,
+                "background": 0.03
+            },
+            "ground_truth": {
+                "threat_level": "high",
+                "expected_tools": ["strobeLight", "humanOperator"],
+                "expected_escalation_level": 4
+            },
+            "metadata": {
+                "description": "Vehicle distraction, person near fence"
+            }
+        },
+        {
+            "id": "history_003a",
+            "category": "history_patience",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. A person is standing near the border, waiting.",
+            "keep_history": false,
+            "cnn_probabilities": {
+                "person": 0.78,
+                "vehicle": 0.05,
+                "animal": 0.07,
+                "background": 0.10
+            },
+            "ground_truth": {
+                "threat_level": "low",
+                "expected_tools": ["trackerLight"],
+                "expected_escalation_level": 1
+            },
+            "metadata": {
+                "description": "Person waiting at border"
+            }
+        },
+        {
+            "id": "history_003b",
+            "category": "history_patience_2",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. The same person has been waiting for 30 minutes.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.80,
+                "vehicle": 0.04,
+                "animal": 0.06,
+                "background": 0.10
+            },
+            "ground_truth": {
+                "threat_level": "low",
+                "expected_tools": ["trackerLight"],
+                "expected_escalation_level": 1
+            },
+            "metadata": {
+                "description": "Extended waiting, still no hostile action"
+            }
+        },
+        {
+            "id": "history_003c",
+            "category": "history_patience_3",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. The person is now climbing the fence.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.92,
+                "vehicle": 0.02,
+                "animal": 0.02,
+                "background": 0.04
+            },
+            "ground_truth": {
+                "threat_level": "high",
+                "expected_tools": ["humanOperator", "callPatrol"],
+                "expected_escalation_level": 5
+            },
+            "metadata": {
+                "description": "Finally attempting to cross"
+            }
+        },
+        {
+            "id": "history_004a",
+            "category": "history_recon",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. A person is photographing the border fence.",
+            "keep_history": false,
+            "cnn_probabilities": {
+                "person": 0.82,
+                "vehicle": 0.03,
+                "animal": 0.05,
+                "background": 0.10
+            },
+            "ground_truth": {
+                "threat_level": "medium",
+                "expected_tools": ["trackerLight", "audibleWarning"],
+                "expected_escalation_level": 2
+            },
+            "metadata": {
+                "description": "Possible reconnaissance"
+            }
+        },
+        {
+            "id": "history_004b",
+            "category": "history_recon_2",
+            "image_path": "",
+            "prompt": "Analyze this image from a border surveillance camera. The same person is now measuring the fence.",
+            "keep_history": true,
+            "cnn_probabilities": {
+                "person": 0.85,
+                "vehicle": 0.02,
+                "animal": 0.03,
+                "background": 0.10
+            },
+            "ground_truth": {
+                "threat_level": "high",
+                "expected_tools": ["strobeLight", "humanOperator"],
+                "expected_escalation_level": 4
+            },
+            "metadata": {
+                "description": "Confirmed hostile reconnaissance"
+            }
         }
-    },
-    {
-        "id": "history_002a",
-        "category": "history_baseline",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. A vehicle is parked near the border.",
-        "keep_history": false,
-        "cnn_probabilities": {
-            "person": 0.20,
-            "vehicle": 0.72,
-            "animal": 0.03,
-            "background": 0.05
-        },
-        "ground_truth": {
-            "threat_level": "low",
-            "expected_tools": ["trackerLight"],
-            "expected_escalation_level": 1
-        },
-        "metadata": {
-            "description": "Initial: vehicle parked near border"
-        }
-    },
-    {
-        "id": "history_002b",
-        "category": "history_waiting",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. The same vehicle has been stationary for 10 minutes.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.25,
-            "vehicle": 0.70,
-            "animal": 0.02,
-            "background": 0.03
-        },
-        "ground_truth": {
-            "threat_level": "medium",
-            "expected_tools": ["trackerLight", "audibleWarning"],
-            "expected_escalation_level": 2
-        },
-        "metadata": {
-            "description": "Vehicle waiting, unusual behavior"
-        }
-    },
-    {
-        "id": "history_002c",
-        "category": "history_departure",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. The vehicle is now departing but a person is visible near the fence.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.65,
-            "vehicle": 0.30,
-            "animal": 0.02,
-            "background": 0.03
-        },
-        "ground_truth": {
-            "threat_level": "high",
-            "expected_tools": ["strobeLight", "humanOperator"],
-            "expected_escalation_level": 4
-        },
-        "metadata": {
-            "description": "Vehicle distraction, person near fence"
-        }
-    },
-    {
-        "id": "history_003a",
-        "category": "history_patience",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. A person is standing near the border, waiting.",
-        "keep_history": false,
-        "cnn_probabilities": {
-            "person": 0.78,
-            "vehicle": 0.05,
-            "animal": 0.07,
-            "background": 0.10
-        },
-        "ground_truth": {
-            "threat_level": "low",
-            "expected_tools": ["trackerLight"],
-            "expected_escalation_level": 1
-        },
-        "metadata": {
-            "description": "Person waiting at border"
-        }
-    },
-    {
-        "id": "history_003b",
-        "category": "history_patience_2",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. The same person has been waiting for 30 minutes.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.80,
-            "vehicle": 0.04,
-            "animal": 0.06,
-            "background": 0.10
-        },
-        "ground_truth": {
-            "threat_level": "low",
-            "expected_tools": ["trackerLight"],
-            "expected_escalation_level": 1
-        },
-        "metadata": {
-            "description": "Extended waiting, still no hostile action"
-        }
-    },
-    {
-        "id": "history_003c",
-        "category": "history_patience_3",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. The person is now climbing the fence.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.92,
-            "vehicle": 0.02,
-            "animal": 0.02,
-            "background": 0.04
-        },
-        "ground_truth": {
-            "threat_level": "high",
-            "expected_tools": ["humanOperator", "callPatrol"],
-            "expected_escalation_level": 5
-        },
-        "metadata": {
-            "description": "Finally attempting to cross"
-        }
-    },
-    {
-        "id": "history_004a",
-        "category": "history_recon",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. A person is photographing the border fence.",
-        "keep_history": false,
-        "cnn_probabilities": {
-            "person": 0.82,
-            "vehicle": 0.03,
-            "animal": 0.05,
-            "background": 0.10
-        },
-        "ground_truth": {
-            "threat_level": "medium",
-            "expected_tools": ["trackerLight", "audibleWarning"],
-            "expected_escalation_level": 2
-        },
-        "metadata": {
-            "description": "Possible reconnaissance"
-        }
-    },
-    {
-        "id": "history_004b",
-        "category": "history_recon_2",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. The same person is now measuring the fence.",
-        "keep_history": true,
-        "cnn_probabilities": {
-            "person": 0.85,
-            "vehicle": 0.02,
-            "animal": 0.03,
-            "background": 0.10
-        },
-        "ground_truth": {
-            "threat_level": "high",
-            "expected_tools": ["strobeLight", "humanOperator"],
-            "expected_escalation_level": 4
-        },
-        "metadata": {
-            "description": "Confirmed hostile reconnaissance"
-        }
-    }
-]
+    ]
+}

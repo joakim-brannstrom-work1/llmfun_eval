@@ -1,4 +1,9 @@
-[
+{
+    "config": {
+        "name": "Persistent Events With Images",
+        "description": "Persistent entity test cases with image paths"
+    },
+    "dataset": [
     {
         "category": "no_threat",
         "cnn_probabilities": {
@@ -292,7 +297,10 @@
         "keep_history": true,
         "metadata": {
             "description": "Person cutting through border fence"
-        },
-        "prompt": "Analyze this image from a border surveillance camera. A person is actively tampering with the border fence, appear to be cutting through."
-    }
+"prompt": "Analyze this image from a border surveillance camera. A person is actively tampering with the border fence, appear to be cutting through."
+        }
+    ]
+}
+}
 ]
+}

@@ -1,4 +1,9 @@
-[
+{
+    "config": {
+        "name": "One Set",
+        "description": "Minimal test set for quick validation"
+    },
+    "dataset": [
     {
         "id": "test_001",
         "category": "no_threat",
@@ -15,8 +20,8 @@
             "expected_tools": [],
             "expected_escalation_level": 0
         },
-        "metadata": {
-            "description": "Clear background, no entities of interest"
+"description": "Clear background, no entities of interest"
         }
-    }
-]
+    ]
+}
+}

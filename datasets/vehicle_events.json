@@ -1,0 +1,128 @@
+[
+    {
+        "id": "vehicle_001",
+        "category": "vehicle_legitimate",
+        "image_path": "",
+        "prompt": "Analyze this image from a border surveillance camera. A patrol vehicle is driving along the border road.",
+        "keep_history": true,
+        "cnn_probabilities": {
+            "person": 0.05,
+            "vehicle": 0.88,
+            "animal": 0.03,
+            "background": 0.04
+        },
+        "ground_truth": {
+            "threat_level": "none",
+            "expected_tools": [],
+            "expected_escalation_level": 0
+        },
+        "metadata": {
+            "description": "Border patrol vehicle, friendly"
+        }
+    },
+    {
+        "id": "vehicle_002",
+        "category": "vehicle_suspicious",
+        "image_path": "",
+        "prompt": "Analyze this image from a border surveillance camera. An unmarked van is parked near the border fence with its lights off.",
+        "keep_history": true,
+        "cnn_probabilities": {
+            "person": 0.15,
+            "vehicle": 0.78,
+            "animal": 0.02,
+            "background": 0.05
+        },
+        "ground_truth": {
+            "threat_level": "medium",
+            "expected_tools": ["trackerLight", "humanOperator"],
+            "expected_escalation_level": 3
+        },
+        "metadata": {
+            "description": "Suspicious van parked near fence at night"
+        }
+    },
+    {
+        "id": "vehicle_003",
+        "category": "vehicle_approach",
+        "image_path": "",
+        "prompt": "Analyze this image from a border surveillance camera. A truck is approaching the border checkpoint at high speed.",
+        "keep_history": true,
+        "cnn_probabilities": {
+            "person": 0.08,
+            "vehicle": 0.90,
+            "animal": 0.01,
+            "background": 0.01
+        },
+        "ground_truth": {
+            "threat_level": "high",
+            "expected_tools": ["strobeLight", "humanOperator", "callPatrol"],
+            "expected_escalation_level": 5
+        },
+        "metadata": {
+            "description": "Truck approaching checkpoint at high speed, potential ramming attack"
+        }
+    },
+    {
+        "id": "vehicle_004",
+        "category": "vehicle_drop_off",
+        "image_path": "",
+        "prompt": "Analyze this image from a border surveillance camera. A car stopped near the border and a person is unloading cargo towards the fence.",
+        "keep_history": true,
+        "cnn_probabilities": {
+            "person": 0.35,
+            "vehicle": 0.60,
+            "animal": 0.02,
+            "background": 0.03
+        },
+        "ground_truth": {
+            "threat_level": "medium",
+            "expected_tools": ["trackerLight", "strobeLight"],
+            "expected_escalation_level": 3
+        },
+        "metadata": {
+            "description": "Vehicle drop-off near border, possible smuggling"
+        }
+    },
+    {
+        "id": "vehicle_005",
+        "category": "vehicle_abandoned",
+        "image_path": "",
+        "prompt": "Analyze this image from a border surveillance camera. An abandoned vehicle is found near the border with its doors open.",
+        "keep_history": true,
+        "cnn_probabilities": {
+            "person": 0.12,
+            "vehicle": 0.82,
+            "animal": 0.03,
+            "background": 0.03
+        },
+        "ground_truth": {
+            "threat_level": "low",
+            "expected_tools": ["trackerLight"],
+            "expected_escalation_level": 1
+        },
+        "metadata": {
+            "description": "Abandoned vehicle, requires investigation but not immediate threat"
+        }
+    },
+    {
+        "id": "vehicle_006",
+        "category": "vehicle_convoy",
+        "image_path": "",
+        "prompt": "Analyze this image from a border surveillance camera. A convoy of 3 vehicles is traveling together towards the border.",
+        "keep_history": true,
+        "cnn_probabilities": {
+            "person": 0.18,
+            "vehicle": 0.78,
+            "animal": 0.02,
+            "background": 0.02
+        },
+        "ground_truth": {
+            "threat_level": "high",
+            "expected_tools": ["humanOperator", "callPatrol"],
+            "expected_escalation_level": 5
+        },
+        "metadata": {
+            "description": "Vehicle convoy approaching border, organized activity"
+        }
+    }
+]

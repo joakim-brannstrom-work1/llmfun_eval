@@ -1,27 +1,26 @@
 {
-    "config": {
-        "name": "One Set",
-        "description": "Minimal test set for quick validation"
-    },
-    "dataset": [
+  "config": {
+    "name": "One Set",
+    "description": "Minimal test set for quick validation"
+  },
+  "dataset": [
     {
-        "id": "test_001",
-        "category": "no_threat",
-        "image_path": "",
-        "prompt": "Analyze this image from a border surveillance camera. Use loadImageApi to analyze the image.",
-        "cnn_probabilities": {
-            "person": 0.02,
-            "vehicle": 0.01,
-            "animal": 0.05,
-            "background": 0.92
-        },
-        "ground_truth": {
-            "threat_level": "none",
-            "expected_tools": [],
-            "expected_escalation_level": 0
-        },
-"description": "Clear background, no entities of interest"
-        }
-    ]
-}
+      "id": "test_001",
+      "category": "no_threat",
+      "image_path": "",
+      "prompt": "Analyze this image from a border surveillance camera. Use loadImageApi to analyze the image.",
+      "cnn_probabilities": {
+        "person": 0.02,
+        "vehicle": 0.01,
+        "animal": 0.05,
+        "background": 0.92
+      },
+      "ground_truth": {
+        "threat_level": "none",
+        "expected_tools": [],
+        "expected_escalation_level": 0
+      },
+      "description": "Clear background, no entities of interest"
+    }
+  ]
 }
